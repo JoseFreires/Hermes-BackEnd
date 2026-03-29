@@ -1,0 +1,18 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\java",
+    "\\src\\main\\java\\com",
+    "\\src\\main\\java\\com\\hermes",
+    "\\src\\main\\java\\com\\hermes\\projeto",
+    "\\src\\main\\java\\com\\hermes\\projeto\\backend",
+    "\\src\\main\\java\\com\\hermes\\projeto\\backend\\config",
+    "\\src\\main\\resources",
+    "\\src\\main\\resources\\db",
+    "\\src\\main\\resources\\db\\migration"
+  ],
+  "SelectedNode": "\\src\\main\\java\\com\\hermes\\projeto\\backend\\config\\Instantiation.java",
+  "PreviewInSolutionExplorer": false
+}

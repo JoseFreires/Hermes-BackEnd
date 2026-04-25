@@ -1,4 +1,4 @@
-package com.hermes.projeto.backend.entitie;
+package com.hermes.projeto.backend.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;

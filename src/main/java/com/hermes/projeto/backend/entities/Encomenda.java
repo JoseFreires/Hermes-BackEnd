@@ -1,4 +1,4 @@
-package com.hermes.projeto.backend.entitie;
+package com.hermes.projeto.backend.entities;
 
 import java.time.LocalDateTime;
 
@@ -78,10 +78,6 @@ public class Encomenda{
         this.morador = morador;
         this.porteiro = porteiro;
         this.dataHoraRetirado = null;
-
-        
-
-
 
     }
 

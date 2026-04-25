@@ -10,19 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
-import com.hermes.projeto.backend.entitie.Encomenda;
+import com.hermes.projeto.backend.entities.Encomenda;
 import com.hermes.projeto.backend.repository.EncomendaRepository;
 import com.hermes.projeto.backend.repository.MoradorRepository;
 import com.hermes.projeto.backend.repository.PorteiroRepository;
 
 import jakarta.validation.Valid;
 
-
-
-
 @RestController
 @RequestMapping("/encomendas")
-public class EcomendaController{
+public class EncomendaController {
 
     @Autowired
     MoradorRepository moradorRepository;

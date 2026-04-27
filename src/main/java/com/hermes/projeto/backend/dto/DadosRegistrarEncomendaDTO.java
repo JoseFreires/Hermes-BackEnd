@@ -18,7 +18,7 @@ public record DadosRegistrarEncomendaDTO(
 
   
 
-    @NotNull(message = "O status é obrigatório")
+    //@NotNull(message = "O status é obrigatório")
     StatusEncomenda status,
 
     String nomeRecepetor, // Opcional (já que temos o ID do morador)

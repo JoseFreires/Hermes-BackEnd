@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
 import com.hermes.projeto.backend.enums.StatusEncomenda;
+import com.hermes.projeto.backend.enums.TipoRetirada;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,11 +36,17 @@ public class Encomenda{
     @Column(name = "nome_pacote")
     private String nomePacote;
 
+    @Column(name = "observacao")
+    private String observacao;
+
     @Column(name = "data_hora_recebido")
     private LocalDateTime dataHoraRecebido;
 
     @Column(name = "data_hora_retirado")
     private LocalDateTime dataHoraRetirado;
+
+    @Column(name = "foto_encomenda")
+    private String fotoEncomenda;
 
     // Se no banco a coluna é apenas 'status', mapeamos assim:
     @Column(name = "status")
@@ -55,12 +62,17 @@ public class Encomenda{
     @Column(name = "token_retirada")
     private String token;
 
+    @Column(name = "tipo_retirada")
+    @Enumerated(EnumType.ORDINAL) // Use ORDINAL se no banco for 0 ou 1 (TINYINT)
+    private TipoRetirada tipoRetirada;
+
+
     @ManyToOne
-    @JoinColumn(name = "`Morador_Pessoa_idPessoa`")
+    @JoinColumn(name = "`Morador_id_papel`")
     private Morador morador;
 
     @ManyToOne
-    @JoinColumn(name = "`Porteiro_Pessoa_idPessoa`")
+    @JoinColumn(name = "`Porteiro_id_papel`")
     private Porteiro porteiro;
 
     // ... restante do código (construtores, etc)

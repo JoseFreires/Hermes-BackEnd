@@ -1,5 +1,7 @@
 package com.hermes.projeto.backend.entities;
 
+import com.hermes.projeto.backend.entities.security.Papel;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
@@ -12,12 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-@PrimaryKeyJoinColumn(name = "idPessoa")
 @Entity (name = "Porteiro")
 @Table(name = "porteiro")
-public class Porteiro extends Pessoa{
+@PrimaryKeyJoinColumn(name = "id_papel")
+public class Porteiro extends Papel{
 
-    private String crodCracha;
+
     private String empresaResponsavel;
     private String turno;
 

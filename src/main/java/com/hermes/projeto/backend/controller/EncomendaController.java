@@ -41,7 +41,7 @@ public class EncomendaController {
         var encomenda = new Encomenda(dados, morador, porteiro);
         repository.save(encomenda);
 
-        var uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomenda.getidEncomenda()).toUri();
+        var uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomenda.getIdEncomenda()).toUri();
         return ResponseEntity.created(uri).body(dados);
     }
 

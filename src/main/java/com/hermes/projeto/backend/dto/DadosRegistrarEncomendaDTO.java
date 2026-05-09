@@ -16,12 +16,8 @@ public record DadosRegistrarEncomendaDTO(
 
     String foto, // Opcional
 
-  
-
     //@NotNull(message = "O status é obrigatório")
     StatusEncomenda status,
-
-    String nomeRecepetor, // Opcional (já que temos o ID do morador)
 
     @NotNull(message = "O ID do morador é obrigatório")
     Long idMorador,
@@ -29,6 +25,9 @@ public record DadosRegistrarEncomendaDTO(
     @NotNull(message = "O ID do porteiro é obrigatório")
     Long idPorteiro,
 
-    String token // Opcional
+    @NotBlank(message = "O tipo de retirada é obrigatório")
+    String token, // Opcional
+
+    String  observacao
 ) {
 }

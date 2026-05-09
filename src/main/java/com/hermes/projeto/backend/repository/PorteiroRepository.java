@@ -10,3 +10,4 @@ import com.hermes.projeto.backend.entities.Porteiro;
 public interface PorteiroRepository extends JpaRepository<Porteiro, Long>{
 
 }
+

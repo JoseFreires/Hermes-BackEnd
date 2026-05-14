@@ -3,6 +3,7 @@ package com.hermes.projeto.backend.entities;
 import java.time.LocalDateTime;
 
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
+import com.hermes.projeto.backend.entities.security.Usuario;
 import com.hermes.projeto.backend.enums.StatusEncomenda;
 import com.hermes.projeto.backend.enums.TipoRetirada;
 
@@ -58,27 +59,28 @@ public class Encomenda {
     private String token;
 
     @Column(name = "tipo_retirada")
-    @Enumerated(EnumType.ORDINAL) 
+    @Enumerated(EnumType.STRING)
     private TipoRetirada tipoRetirada;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Lazy é melhor para performance
-    @JoinColumn(name = "Morador_id_papel")
-    private Morador morador;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_destinatario")
+    private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Porteiro_id_papel")
     private Porteiro porteiro;
 
     // Construtor de Negócio
-    public Encomenda(DadosRegistrarEncomendaDTO dados, Morador morador, Porteiro porteiro){
+    public Encomenda(DadosRegistrarEncomendaDTO dados, Porteiro porteiro, Usuario usuario){
         this.nomePacote = dados.nomePacote();
         this.observacao = dados.observacao(); // Não esqueça da observação que adicionamos!
         this.fotoEncomenda = dados.foto();   // Salva na coluna que vai pro banco
         this.statusEncomenda = StatusEncomenda.RECEBIDA;
         this.dataHoraRecebido = LocalDateTime.now();
         this.tipoRetirada = TipoRetirada.MORADOR; // Valor padrão inicial
-        this.morador = morador;
+        this.usuario = usuario; // Usuario agora
         this.porteiro = porteiro;
+        this.token = dados.token();
     }
 
 }

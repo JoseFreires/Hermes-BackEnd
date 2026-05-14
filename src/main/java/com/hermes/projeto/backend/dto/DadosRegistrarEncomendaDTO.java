@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.hermes.projeto.backend.enums.StatusEncomenda;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,12 +17,15 @@ public record DadosRegistrarEncomendaDTO(
 
     String foto, // Opcional
 
-    //@NotNull(message = "O status é obrigatório")
+    @NotNull(message = "O status é obrigatório")
     StatusEncomenda status,
 
-    @NotNull(message = "O ID do morador é obrigatório")
-    Long idMorador,
+    //Adicionei o email aqui e tirei Morador
+    @NotBlank
+    @Email
+    String emailDestinatario,
 
+    //Ainda precisa mudar isso ksks
     @NotNull(message = "O ID do porteiro é obrigatório")
     Long idPorteiro,
 

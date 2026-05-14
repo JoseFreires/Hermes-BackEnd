@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public record DadosAtualizacaoEncomendaDTO(
@@ -9,9 +10,8 @@ public record DadosAtualizacaoEncomendaDTO(
 
     String observacao,
 
-    @NotBlank(message = "O ID do morador é obrigatório")
-    Long moradorId
-
-
+    //Incluindo email para ligação se atualizar
+    @NotBlank(message = "O email do usuario é obrigatório")
+    String emailDestinatario
 
 ){}

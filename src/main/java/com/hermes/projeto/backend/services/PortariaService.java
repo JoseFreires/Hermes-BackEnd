@@ -3,6 +3,10 @@ package com.hermes.projeto.backend.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hermes.projeto.backend.dto.DadosListagemEncomendaDTO;
+import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.repository.PorteiroRepository;
+import com.hermes.projeto.backend.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +17,6 @@ import com.hermes.projeto.backend.entities.Encomenda;
 import com.hermes.projeto.backend.entities.Porteiro;
 import com.hermes.projeto.backend.enums.StatusEncomenda;
 import com.hermes.projeto.backend.repository.EncomendaRepository;
-import com.hermes.projeto.backend.repository.MoradorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -24,55 +27,62 @@ public class PortariaService {
     private EncomendaRepository encomendaRepository;
 
     @Autowired
-    private MoradorRepository moradorRepository;
+    private PorteiroRepository porteiroRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     // + registrarNovaEncomenda() : void
     @Transactional
-    public void registrarNovaEncomenda(DadosRegistrarEncomendaDTO dados, Porteiro porteiro) {
-        // Busca o morador destinado
-        var morador = moradorRepository.findById(dados.idMorador())
-                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
+    public Encomenda registrarNovaEncomenda(DadosRegistrarEncomendaDTO dados) {
+        // Procura o usuário pelo e-mail (no nosso caso é o username) que veio do dropdown do front
+        var usuario = usuarioRepository.findByUsername(dados.emailDestinatario());
+        if (usuario == null) {
+            throw new EntityNotFoundException("Usuário destinatário não encontrado com o e-mail: " + dados.emailDestinatario());
+        }//Se não encontrar email
 
-        // Cria a entidade Encomenda usando o construtor de negócio que validamos
-        var encomenda = new Encomenda(dados, morador, porteiro);
-        
-        encomendaRepository.save(encomenda);
+        // Procura o porteiro que está operando o sistema (Não mexi no id pq não sei como fazer pelo token Rian manja)
+        var porteiro = porteiroRepository.findById(dados.idPorteiro())
+                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
+
+
+        var encomenda = new Encomenda(dados, porteiro, (Usuario) usuario);
+
+        return encomendaRepository.save(encomenda);
     }
 
-    // + visualizarEncomendas() : List<Encomenda>
     public List<Encomenda> visualizarEncomendas() {
         return encomendaRepository.findAll();
     }
 
-    // + atualizarStatusEncomenda() : void
     @Transactional
-public void atualizarStatusEncomenda(Long idEncomenda, StatusEncomenda novoStatus) {
-    var encomenda = encomendaRepository.findById(idEncomenda)
-            .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
-    
-    encomenda.setStatusEncomenda(novoStatus);
+    public void atualizarStatusEncomenda(Long idEncomenda, StatusEncomenda novoStatus) {
+        var encomenda = encomendaRepository.findById(idEncomenda)
+                .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
 
-    // Lógica extra: se retirou, marca a hora agora!
-    if (novoStatus == StatusEncomenda.RETIRADA) {
-        encomenda.setDataHoraRetirado(LocalDateTime.now());
+        encomenda.setStatusEncomenda(novoStatus);
+
+        if (novoStatus == StatusEncomenda.RETIRADA) {
+            encomenda.setDataHoraRetirado(LocalDateTime.now());
+        }
     }
-}
 
-    // + EditarEncomenda() : void
     @Transactional
     public void editarEncomenda(Long id, DadosAtualizacaoEncomendaDTO dados) {
         var encomenda = encomendaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
-        
+
         if (dados.nomePacote() != null) {
             encomenda.setNomePacote(dados.nomePacote());
         }
 
-        if (dados.moradorId() != null){
-            var morador = moradorRepository.findById(dados.moradorId())
-            .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
-
-            encomenda.setMorador(morador);
+        // caso o e-mail mude ele faz a verificação novamente
+        if (dados.emailDestinatario() != null) {
+            var usuario = usuarioRepository.findByUsername(dados.emailDestinatario());
+            if (usuario == null) {
+                throw new EntityNotFoundException("Novo usuário destinatário não encontrado");
+            }
+            encomenda.setUsuario((Usuario) usuario);
         }
 
         if (dados.observacao() != null) {
@@ -80,18 +90,24 @@ public void atualizarStatusEncomenda(Long idEncomenda, StatusEncomenda novoStatu
         }
     }
 
-    // + consultaEncomenda() : Encomenda
-    public Encomenda consultaEncomenda(Long id) {
-        return encomendaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
-    }
+//    public Encomenda consultaEncomenda(Long id) {
+//        return encomendaRepository.findById(id)
+//                .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
+//    }
 
-    // + removeEncomenda() : void
     @Transactional
     public void removeEncomenda(Long id) {
         if (!encomendaRepository.existsById(id)) {
             throw new EntityNotFoundException("Não é possível remover: Encomenda inexistente.");
         }
         encomendaRepository.deleteById(id);
+    }
+
+    //Método do GET com DTO
+    public DadosListagemEncomendaDTO consultaEncomendaDTO(Long id) {
+        var encomenda = encomendaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
+
+        return new DadosListagemEncomendaDTO(encomenda);
     }
 }

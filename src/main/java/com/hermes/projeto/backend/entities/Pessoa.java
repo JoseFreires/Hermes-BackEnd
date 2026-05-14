@@ -24,19 +24,23 @@ import lombok.Setter;
 @EqualsAndHashCode (of = "id")
 @Getter
 @Setter
-public abstract class Pessoa {
+public class Pessoa {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idPessoa")
     private Long id;
-    
+
+    @Column(name = "nome_completo")
     private String nomeCompleto;
-    
+
+
     @Column(unique = true)
     private String cpf;
 
-
     private Boolean ativo;
 
+    @Column(name = "data_nascimento")
     @Temporal(TemporalType.DATE)
     private Date dataNascimento;
     

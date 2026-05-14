@@ -1,8 +1,3 @@
--- Se tiverem com registros ocultos de encomenda, utilizem:
---SET SQL_SAFE_UPDATES = 0;
---DELETE FROM encomenda;
---SET SQL_SAFE_UPDATES = 1;
-
 -- Padronizando o Enum (No Spring esta sem acento já no banco estava)
 
 ALTER TABLE `porteiro`
@@ -24,3 +19,5 @@ ALTER TABLE `encomenda`
     ADD CONSTRAINT `fk_encomenda_usuario`
     FOREIGN KEY (`id_usuario_destinatario`)
     REFERENCES `usuario` (`idUsuario`);
+
+-- Se der algum erro DROP no banco e roda o código que funciona ksks

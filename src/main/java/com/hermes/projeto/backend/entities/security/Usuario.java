@@ -54,6 +54,8 @@ public class Usuario implements UserDetails {
         joinColumns = @JoinColumn(name = "Usuario_idUsuario"),
         inverseJoinColumns = @JoinColumn(name = "Papel_idPapel")
     )
+
+
     private Set<Papel> papeis = new HashSet<>();
 
     /* Usamos Set em vez de List para evitar papéis duplicados 

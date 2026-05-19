@@ -63,24 +63,22 @@ public class Encomenda {
     private TipoRetirada tipoRetirada;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario_destinatario")
-    private Usuario usuario;
+    @JoinColumn(name = "id_usuario_porteiro") // Nome da coluna na Migration V4
+    private Usuario porteiro;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Porteiro_id_papel")
-    private Porteiro porteiro;
+    @JoinColumn(name = "id_usuario_morador") // Nome da coluna na Migration V4
+    private Usuario morador;
 
-    // Construtor de Negócio
-    public Encomenda(DadosRegistrarEncomendaDTO dados, Porteiro porteiro, Usuario usuario){
+    // Construtor atualizado
+    public Encomenda(DadosRegistrarEncomendaDTO dados, Usuario porteiro, Usuario morador) {
         this.nomePacote = dados.nomePacote();
-        this.observacao = dados.observacao(); // Não esqueça da observação que adicionamos!
-        this.fotoEncomenda = dados.foto();   // Salva na coluna que vai pro banco
-        this.statusEncomenda = StatusEncomenda.RECEBIDA;
         this.dataHoraRecebido = LocalDateTime.now();
-        this.tipoRetirada = TipoRetirada.MORADOR; // Valor padrão inicial
-        this.usuario = usuario; // Usuario agora
+        this.statusEncomenda = StatusEncomenda.RECEBIDA;
+        this.token = dados.token(); // Sua lógica de token
         this.porteiro = porteiro;
-        this.token = dados.token();
+        this.morador = morador;
+        this.fotoEncomenda = dados.foto();
     }
 
 }

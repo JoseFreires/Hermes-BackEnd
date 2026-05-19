@@ -25,9 +25,6 @@ public record DadosRegistrarEncomendaDTO(
     @Email
     String emailDestinatario,
 
-    //Ainda precisa mudar isso ksks
-    @NotNull(message = "O ID do porteiro é obrigatório")
-    Long idPorteiro,
 
     @NotBlank(message = "O tipo de retirada é obrigatório")
     String token, // Opcional

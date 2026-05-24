@@ -23,16 +23,33 @@ public class SecurityConfig {
     private SecurityFilter securityFilter;
 
 
-    @Bean  
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, "/login")
-            .permitAll()
-            .anyRequest().authenticated())
-            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-    }
+    @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http.csrf(csrf -> csrf.disable())
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(request -> {
+            request.requestMatchers(HttpMethod.POST, "/login").permitAll();
+            
+           //ENCOMENDAS
+           
+
+
+            //MORADORES
+
+
+            //SINDICOS
+
+
+            //PESSOAS AUTORIZADAS
+
+
+            //SINDICO
+
+            request.anyRequest().authenticated();
+        })
+        .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+        .build();
+}
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {

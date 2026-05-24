@@ -3,8 +3,10 @@ package com.hermes.projeto.backend.entities.security.service;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
@@ -25,13 +27,17 @@ public class TokenService{
             
             Algorithm  algorithm = Algorithm.HMAC256(segredo.trim());
           
-            
+            List<String> roles = usuario.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
 
-                return  JWT.create()
-                    .withIssuer("Hermes")
-                    .withSubject(usuario.getUsername())
-                    .withExpiresAt(Expiracao())
-                    .sign(algorithm);
+            return JWT.create()
+                .withIssuer("Hermes")
+                .withSubject(usuario.getUsername()) 
+                .withClaim("roles", roles)              // Adiciona a lista de Strings ["ROLE_PORTEIRO", "ROLE_MORADOR"]
+                .withExpiresAt(Expiracao())
+                .sign(algorithm);
 
                 
         }catch (JWTCreationException exception){

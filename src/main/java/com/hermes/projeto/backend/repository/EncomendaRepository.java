@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface EncomendaRepository extends JpaRepository<Encomenda, Long> {
 
-    @Query("SELECT e FROM Encomenda e JOIN FETCH e.morador JOIN FETCH e.porteiro")
-    Page<Encomenda> findAll(Pageable pageable);
+    @Query("SELECT e FROM Encomenda e JOIN FETCH e.moradorDestinatario JOIN FETCH e.porteiro")
+    List<Encomenda> findAll();
 }

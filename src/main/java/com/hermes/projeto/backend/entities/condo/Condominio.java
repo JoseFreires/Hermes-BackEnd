@@ -19,17 +19,18 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "condominio")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Condominio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_condominio")
+    @Column(name = "idCondominio")
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String nome;
+    private String nome_condominio;
 
     @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL)
     private List<Bloco> blocos = new ArrayList<>();

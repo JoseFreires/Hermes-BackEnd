@@ -1,20 +1,17 @@
 package com.hermes.projeto.backend.entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import com.hermes.projeto.backend.dto.DadosPessoaDTO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import  com.hermes.projeto.backend.entities.PerfilMorador;
+import org.springframework.cglib.core.Local;
 
 
 @NoArgsConstructor // Adicione isso
@@ -42,10 +39,23 @@ public class Pessoa {
 
     @Column(name = "data_nascimento")
     @Temporal(TemporalType.DATE)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     
     private String telefone;
     private String email;
-    
+
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PerfilMorador perfilMorador;
+
+
+    public Pessoa(DadosPessoaDTO dados) {
+        this.nomeCompleto = dados.nomeCompleto();
+        this.cpf = dados.cpf();
+        this.email = dados.email();
+        this.telefone = dados.telefone();
+        this.dataNascimento = dados.dataNascimento();
+        this.ativo = true;
+    }
+
 
 }

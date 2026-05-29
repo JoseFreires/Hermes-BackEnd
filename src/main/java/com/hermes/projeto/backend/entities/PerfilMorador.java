@@ -1,27 +1,27 @@
 package com.hermes.projeto.backend.entities;
 
 import java.time.LocalDate;
+import java.util.Date;
 
+import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
 import com.hermes.projeto.backend.entities.condo.Moradia;
 import com.hermes.projeto.backend.entities.security.Papel;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "morador")
-// Esta anotação vincula a PK desta tabela (id_papel) à PK da tabela Papel
-@PrimaryKeyJoinColumn(name = "id_papel") 
-public class Morador extends Papel {
+@Table(name = "perfil_morador")
+public class PerfilMorador {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idPerfilMorador")
+    private Long id;
 
     @Column(name = "data_chegada", nullable = false)
     private LocalDate dataChegada;
@@ -39,7 +39,19 @@ public class Morador extends Papel {
     @JoinColumn(name = "moradia_idMoradia", nullable = false)
     private Moradia moradia;
 
-    /* Nota: O Morador não precisa de um @Id próprio aqui, 
-       pois ele herda o ID da classe Papel.
-    */
+    @OneToOne
+    @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
+    private Pessoa pessoa;
+
+
+    public PerfilMorador(DadosRegistrarMoradorDTO dados, Moradia moradia) {
+        this.dataChegada = dados.dataChegada();
+        this.urlFoto = dados.fotoPerfil();
+        this.moradia = moradia;
+    }
+
+    public PerfilMorador(){
+        
+    }
+
 }

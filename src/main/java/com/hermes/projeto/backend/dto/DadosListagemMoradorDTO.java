@@ -1,11 +1,9 @@
 package com.hermes.projeto.backend.dto;
 
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.condo.Moradia;
-import com.hermes.projeto.backend.entities.security.Usuario;
 
 import java.time.LocalDate;
-import java.util.Date;
+
+import com.hermes.projeto.backend.entities.security.Usuario;
 
 public record DadosListagemMoradorDTO(
         Long   idUsuario,

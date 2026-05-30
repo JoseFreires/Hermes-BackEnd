@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.hermes.projeto.backend.dto.DadosListagemEncomendaDTO;
+import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
 import com.hermes.projeto.backend.entities.security.Usuario;
 import com.hermes.projeto.backend.services.PortariaService;
@@ -43,7 +43,7 @@ public class EncomendaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DadosListagemEncomendaDTO>> listar() {
+    public ResponseEntity<List<DadosConsultaEncomendaDTO>> listar() {
         return ResponseEntity.ok(portariaService.listarTodas());
     }
 

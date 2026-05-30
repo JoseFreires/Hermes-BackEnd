@@ -1,6 +1,6 @@
 package com.hermes.projeto.backend.controller;
 
-import com.hermes.projeto.backend.dto.DadosListagemMoradorDTO;
+import com.hermes.projeto.backend.dto.DadosConsultaMoradorDTO;
 import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
 import com.hermes.projeto.backend.services.MoradorService;
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public class MoradorController {
     private MoradorService moradorService;
 
     @PostMapping
-    public ResponseEntity<DadosListagemMoradorDTO> registrar(@Valid @RequestBody DadosRegistrarMoradorDTO dados,
+    public ResponseEntity<DadosConsultaMoradorDTO> registrar(@Valid @RequestBody DadosRegistrarMoradorDTO dados,
                                                              UriComponentsBuilder uriBuilder) {
 
         var moradorDto = moradorService.registrar(dados);
@@ -29,12 +29,12 @@ public class MoradorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DadosListagemMoradorDTO>> listar() {
+    public ResponseEntity<List<DadosConsultaMoradorDTO>> listar() {
         return ResponseEntity.ok(moradorService.listarTodas());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DadosListagemMoradorDTO> detalhar(@PathVariable Long id) {
+    public ResponseEntity<DadosConsultaMoradorDTO> detalhar(@PathVariable Long id) {
         var detalhes = moradorService.buscarPorId(id);
         return ResponseEntity.ok(detalhes);
     }

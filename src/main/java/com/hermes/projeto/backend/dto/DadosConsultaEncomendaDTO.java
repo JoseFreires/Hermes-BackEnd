@@ -2,7 +2,7 @@ package com.hermes.projeto.backend.dto;
 
 import com.hermes.projeto.backend.entities.Encomenda;
 
-public record DadosListagemEncomendaDTO(
+public record DadosConsultaEncomendaDTO(
         Long id,
         String nomePacote,
         String observacao,
@@ -13,7 +13,7 @@ public record DadosListagemEncomendaDTO(
         String emailDestinatario
 ){
     // Construtor para converter a Entidade Encomenda direto para o DTO
-    public DadosListagemEncomendaDTO(Encomenda encomenda) {
+    public DadosConsultaEncomendaDTO(Encomenda encomenda) {
         this(
             encomenda.getIdEncomenda(),
             encomenda.getNomePacote(),

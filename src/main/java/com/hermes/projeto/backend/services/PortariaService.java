@@ -2,14 +2,13 @@ package com.hermes.projeto.backend.services;
 
 import java.util.List;
 
-import com.hermes.projeto.backend.entities.PerfilMorador;
 import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.dto.DadosListagemEncomendaDTO;
+import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
 import com.hermes.projeto.backend.entities.Encomenda;
 import com.hermes.projeto.backend.entities.security.Usuario;
@@ -31,7 +30,7 @@ public class PortariaService {
     private PessoaRepository pessoaRepository;
 
     @Transactional
-    public DadosListagemEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
+    public DadosConsultaEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
         // 1. Busca destinatário (Morador)
         Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
@@ -54,21 +53,21 @@ public class PortariaService {
 
         // O SEGREDO: Converter para DTO AQUI dentro.
         // Como o método é @Transactional, o Hibernate consegue buscar o NomeCompleto agora.
-        return new DadosListagemEncomendaDTO(encomenda);
+        return new DadosConsultaEncomendaDTO(encomenda);
     }
 
     @Transactional(readOnly = true)
-    public List<DadosListagemEncomendaDTO> listarTodas() {
+    public List<DadosConsultaEncomendaDTO> listarTodas() {
         // Usando o stream aqui dentro do Transactional também resolve para a lista
         return repository.findAll().stream()
-                .map(DadosListagemEncomendaDTO::new)
+                .map(DadosConsultaEncomendaDTO::new)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public DadosListagemEncomendaDTO buscarPorId(Long id) {
+    public DadosConsultaEncomendaDTO buscarPorId(Long id) {
         var encomenda = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
-        return new DadosListagemEncomendaDTO(encomenda);
+        return new DadosConsultaEncomendaDTO(encomenda);
     }
 }

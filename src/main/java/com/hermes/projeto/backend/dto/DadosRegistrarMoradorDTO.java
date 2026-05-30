@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public record DadosRegistrarMoradorDTO(
 
         @NotNull @Valid
-        DadosPessoaDTO pessoa,
+        DadosRegistrarPessoaDTO pessoa,
 
         @NotNull @Valid
         DadosLoginDTO usuario,

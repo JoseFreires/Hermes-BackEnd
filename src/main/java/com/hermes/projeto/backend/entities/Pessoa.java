@@ -1,17 +1,14 @@
 package com.hermes.projeto.backend.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-import com.hermes.projeto.backend.dto.DadosPessoaDTO;
+import com.hermes.projeto.backend.dto.DadosRegistrarPessoaDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import  com.hermes.projeto.backend.entities.PerfilMorador;
-import org.springframework.cglib.core.Local;
 
 
 @NoArgsConstructor // Adicione isso
@@ -49,7 +46,7 @@ public class Pessoa {
 
 
 
-    public Pessoa(DadosPessoaDTO dados) {
+    public Pessoa(DadosRegistrarPessoaDTO dados) {
         this.nomeCompleto = dados.nomeCompleto();
         this.cpf = dados.cpf();
         this.email = dados.email();

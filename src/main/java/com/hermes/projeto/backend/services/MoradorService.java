@@ -34,7 +34,7 @@ public class MoradorService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public DadosListagemMoradorDTO registrar(DadosRegistrarMoradorDTO dados) {
+    public DadosConsultaMoradorDTO registrar(DadosRegistrarMoradorDTO dados) {
 
         //Buscando a moradia para associar (como tinhaos falado nas reuniões moradia etc já vai ter cadastro)
         Moradia moradia = moradiaRepository.findById(dados.idMoradia())
@@ -67,23 +67,23 @@ public class MoradorService {
         usuarioRepository.save(usuario);
 
         // retorna o usuario completo
-        return new DadosListagemMoradorDTO(usuario);
+        return new DadosConsultaMoradorDTO(usuario);
     }
 
     //Get padrão
     @Transactional(readOnly = true)
-    public List<DadosListagemMoradorDTO> listarTodas() {
+    public List<DadosConsultaMoradorDTO> listarTodas() {
         return usuarioRepository.findAll().stream()
                 .filter(usuario -> usuario.getPessoa().getPerfilMorador() != null)
-                .map(DadosListagemMoradorDTO::new)
+                .map(DadosConsultaMoradorDTO::new)
                 .toList();
     }
 
     //Get por ID
     @Transactional(readOnly = true)
-    public DadosListagemMoradorDTO buscarPorId(Long id) {
+    public DadosConsultaMoradorDTO buscarPorId(Long id) {
         Usuario morador = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
-        return new DadosListagemMoradorDTO(morador);
+        return new DadosConsultaMoradorDTO(morador);
     }
 }

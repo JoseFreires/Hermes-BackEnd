@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import com.hermes.projeto.backend.entities.security.Usuario;
 
-public record DadosListagemMoradorDTO(
+public record DadosConsultaMoradorDTO(
         Long   idUsuario,
         String nome,
         String email,
@@ -17,7 +17,7 @@ public record DadosListagemMoradorDTO(
         String telefone
 ) {
     // Construtor
-    public DadosListagemMoradorDTO(Usuario usuario) {
+    public DadosConsultaMoradorDTO(Usuario usuario) {
         this(
                 usuario.getId(),
                 usuario.getPessoa().getNomeCompleto(),

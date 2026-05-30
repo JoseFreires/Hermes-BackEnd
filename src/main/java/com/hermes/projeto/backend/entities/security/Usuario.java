@@ -44,7 +44,7 @@ public class Usuario implements UserDetails {
 
     // Relacionamento 1:1 com Pessoa (Um usuário é uma pessoa específica)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
+    @JoinColumn(name = "Pessoa_idPessoa", nullable = false)
     private Pessoa pessoa;
 
     // Relacionamento Many-to-Many com Papel

@@ -48,6 +48,7 @@ public class Pessoa {
     private PerfilMorador perfilMorador;
 
 
+
     public Pessoa(DadosPessoaDTO dados) {
         this.nomeCompleto = dados.nomeCompleto();
         this.cpf = dados.cpf();

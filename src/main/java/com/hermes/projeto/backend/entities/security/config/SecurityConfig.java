@@ -32,7 +32,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             
            //ENCOMENDAS
            
-
+            request.requestMatchers(HttpMethod.POST, "/encomendas").hasRole("PORTEIRO");
+            request.requestMatchers(HttpMethod.GET, "/encomendas").hasAnyRole("PORTEIRO", "MORADOR", "SINDICO");
 
             //MORADORES
 

@@ -2,6 +2,7 @@ package com.hermes.projeto.backend.dto;
 
 import java.time.LocalDateTime;
 
+import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.enums.StatusEncomenda;
 
 import jakarta.validation.constraints.Email;
@@ -21,9 +22,11 @@ public record DadosRegistrarEncomendaDTO(
     StatusEncomenda status,
 
     //Adicionei o email aqui e tirei Morador
-    @NotBlank
-    @Email
+    @NotBlank @Email
     String emailDestinatario,
+
+    @NotNull(message = "O ID do destinatário é obrigatório")
+    Long idDestinatario,
 
 
     @NotBlank(message = "O tipo de retirada é obrigatório")

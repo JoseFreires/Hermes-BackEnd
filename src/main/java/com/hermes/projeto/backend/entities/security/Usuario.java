@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hermes.projeto.backend.dto.DadosLoginDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +44,7 @@ public class Usuario implements UserDetails {
 
     // Relacionamento 1:1 com Pessoa (Um usuário é uma pessoa específica)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
+    @JoinColumn(name = "Pessoa_idPessoa", nullable = false)
     private Pessoa pessoa;
 
     // Relacionamento Many-to-Many com Papel
@@ -62,10 +63,19 @@ public class Usuario implements UserDetails {
        e FetchType.EAGER para que os papéis venham carregados no login.
     */
 
+    public Usuario(DadosLoginDTO dados, String senhaCriptografada) {
+        this.username = dados.username();
+        this.senha = senhaCriptografada;
+    }
+
+    public Usuario() {
+
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return papeis.stream()
-            .map(papel -> new SimpleGrantedAuthority("ROLE_" + papel.getNomePapel()))
+            .map(papel -> new SimpleGrantedAuthority(papel.getNomePapel()))
             .toList();
     }
 

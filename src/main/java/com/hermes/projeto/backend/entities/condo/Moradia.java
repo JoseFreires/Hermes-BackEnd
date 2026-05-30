@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hermes.projeto.backend.entities.Morador;
+import com.hermes.projeto.backend.entities.PerfilMorador;
 
 @Entity
 @Table(name = "moradia")
@@ -20,22 +20,19 @@ public class Moradia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_moradia")
+    @Column(name = "idMoradia")
     private Long id;
 
     @Column(nullable = false, length = 10)
     private String numero; // Ex: "101", "Apto 22"
 
-    @Column(length = 10)
-    private String andar; // Opcional: "Térreo", "1º", etc.
-
     // Muitas moradias pertencem a UM bloco
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bloco_id_bloco", nullable = false)
+    @JoinColumn(name = "bloco_idBloco", nullable = false)
     private Bloco bloco;
 
     // Uma moradia pode ter vários moradores (família, inquilinos)
     // O 'mappedBy' aponta para o nome do atributo 'moradia' dentro da classe Morador
     @OneToMany(mappedBy = "moradia")
-    private List<Morador> moradores = new ArrayList<>();
+    private List<PerfilMorador> moradores = new ArrayList<>();
 }

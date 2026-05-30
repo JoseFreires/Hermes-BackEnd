@@ -28,14 +28,14 @@ public class Bloco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_bloco")
+    @Column(name = "idTorre")
     private Long id;
 
     @Column(nullable = false, length = 45)
-    private String nome; // Ex: "Bloco A", "Torre 1"
+    private String nome_torre; // Ex: "Bloco A", "Torre 1"
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "condominio_id_condominio", nullable = false)
+    @JoinColumn(name = "Condominio_idCondominio", nullable = false)
     private Condominio condominio;
 
     @OneToMany(mappedBy = "bloco", cascade = CascadeType.ALL)

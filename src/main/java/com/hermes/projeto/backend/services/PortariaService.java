@@ -2,6 +2,9 @@ package com.hermes.projeto.backend.services;
 
 import java.util.List;
 
+import com.hermes.projeto.backend.entities.PerfilMorador;
+import com.hermes.projeto.backend.entities.Pessoa;
+import com.hermes.projeto.backend.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +27,14 @@ public class PortariaService {
     @Autowired
     private EncomendaRepository repository;
 
+    @Autowired
+    private PessoaRepository pessoaRepository;
+
     @Transactional
     public DadosListagemEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
         // 1. Busca destinatário (Morador)
-        var morador = (Usuario) usuarioRepository.findByUsername(dados.emailDestinatario());
-        if (morador == null) {
-            throw new EntityNotFoundException("Morador não encontrado");
-        }
+        Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
 
         // 2. Validação de papel
         // Carrega o usuário (porteiro) gerenciado dentro da transação para evitar LazyInitializationException
@@ -38,7 +42,7 @@ public class PortariaService {
             .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
 
         boolean ePorteiro = porteiro.getPapeis().stream()
-            .anyMatch(p -> p.getNomePapel().equals("PORTEIRO"));
+            .anyMatch(p -> p.getNomePapel().equals("ROLE_PORTEIRO"));
 
         if (!ePorteiro) {
             throw new RuntimeException("Apenas usuários com papel de porteiro podem registrar encomendas");

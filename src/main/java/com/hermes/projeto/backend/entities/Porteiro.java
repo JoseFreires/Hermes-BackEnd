@@ -3,12 +3,7 @@ package com.hermes.projeto.backend.entities;
 import com.hermes.projeto.backend.entities.security.Papel;
 import com.hermes.projeto.backend.enums.TurnoPorteiro;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity (name = "Porteiro")
-@Table(name = "porteiro")
-@PrimaryKeyJoinColumn(name = "id_papel")
-public class Porteiro extends Papel {
+@Table(name = "perfil_porteiro")
+
+public class Porteiro{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "IdPerfilPorteiro")
+    private Long id;
 
     @Column(name = "empresa_responsavel", length = 100)
     private String empresaResponsavel;
@@ -29,6 +29,10 @@ public class Porteiro extends Papel {
     @Enumerated(EnumType.STRING) // Ou STRING, dependendo de como salvou no banco
     @Column(name = "turno")
     private TurnoPorteiro turno;
+
+    @OneToOne
+    @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
+    private Pessoa pessoa;
 
     /* Paralistar todas as encomendas que este porteiro 
        recebeu, pode adicionar o mapeamento inverso aqui:

@@ -9,23 +9,26 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name = "papel")
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
-public abstract class Papel {
+@Setter
+@Table(name = "papel")
+public class Papel implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idPapel")
-    private Long id;
+    private Long idPapel;
 
-    @Column(name = "nome_papel", nullable = false, unique = true)
+    @Column(name = "nome_papel", nullable = false, unique = true, length = 45)
     private String nomePapel;
 
-    /* Para saber a qual usuário este papel pertence 
-       diretamente pelo objeto Papel, você pode mapear o lado inverso 
-       do relacionamento ManyToMany ou OneToOne aqui futuramente.
-    */
+    @Override
+    public String getAuthority() {
+        return this.nomePapel;
+    }
+
 }

@@ -39,7 +39,4 @@ public class Morador extends Papel {
     @JoinColumn(name = "moradia_idMoradia", nullable = false)
     private Moradia moradia;
 
-    /* Nota: O Morador não precisa de um @Id próprio aqui, 
-       pois ele herda o ID da classe Papel.
-    */
 }

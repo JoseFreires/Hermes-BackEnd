@@ -22,11 +22,11 @@ public record DadosConsultaMoradorDTO(
                 usuario.getId(),
                 usuario.getPessoa().getNomeCompleto(),
                 usuario.getPessoa().getEmail(),
-                usuario.getPessoa().getPerfilMorador().getMoradia().getNumero(),
+                usuario.getPessoa().getMorador().getMoradia().getNumero(),
                 usuario.getPessoa().getCpf(),
-                usuario.getPessoa().getPerfilMorador().getDataChegada(),
+                usuario.getPessoa().getMorador().getDataChegada(),
                 usuario.getPessoa().getDataNascimento(),
-                usuario.getPessoa().getPerfilMorador().getUrlFoto(),
+                usuario.getPessoa().getMorador().getUrlFoto(),
                 usuario.getPessoa().getTelefone()
 
         );

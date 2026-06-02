@@ -21,7 +21,7 @@ public record DadosConsultaEncomendaDTO(
             encomenda.getStatusEncomenda().toString(),
             encomenda.getMoradorDestinatario().getNomeCompleto(), // Pega o nome do Usuario (Morador)
             encomenda.getPorteiro().getPessoa().getNomeCompleto(),// Pega o nome do Usuario (Porteiro)
-            encomenda.getMoradorDestinatario().getPerfilMorador().getMoradia().getNumero(),
+            encomenda.getMoradorDestinatario().getMorador().getMoradia().getNumero(),
             encomenda.getMoradorDestinatario().getEmail()
         );
     }

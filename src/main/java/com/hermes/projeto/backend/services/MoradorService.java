@@ -1,7 +1,7 @@
 package com.hermes.projeto.backend.services;
 
 import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.PerfilMorador;
+import com.hermes.projeto.backend.entities.Morador;
 import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.entities.condo.Moradia;
 import com.hermes.projeto.backend.entities.security.Papel;
@@ -34,7 +34,7 @@ public class MoradorService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public DadosConsultaMoradorDTO registrar(DadosRegistrarMoradorDTO dados) {
+    public DadosConsultaMoradorDTO registrarMorador(DadosRegistrarMoradorDTO dados) {
 
         //Buscando a moradia para associar (como tinhaos falado nas reuniões moradia etc já vai ter cadastro)
         Moradia moradia = moradiaRepository.findById(dados.idMoradia())
@@ -47,20 +47,22 @@ public class MoradorService {
         //Instancia de pessoa
         Pessoa pessoa = new Pessoa(dados.pessoa());
 
-        //Instancia de perfilMorador (Não é mais um papel)
-        PerfilMorador perfilMorador = new PerfilMorador(dados, moradia);
+        //Instancia de Morador (Não é mais um papel)
+        Morador morador = new Morador(dados, moradia);
 
         // Inserindo composição
-        perfilMorador.setPessoa(pessoa);
-        pessoa.setPerfilMorador(perfilMorador);
+        morador.setPessoa(pessoa);
+        pessoa.setMorador(morador);
         pessoaRepository.save(pessoa);
 
-        //Senha com a lógica do Rian
+        //Senha com a lógica do Rian de criptografia
         String senhaCodificada = passwordEncoder.encode(dados.usuario().senha());
         Usuario usuario = new Usuario(dados.usuario(), senhaCodificada);
 
         //Colocando navegabilidade (como no diagrama)
         usuario.setPessoa(pessoa);
+
+        //Inserindo Role Morador
         usuario.getPapeis().add(papelMorador);
 
         //Salva Usuario
@@ -72,16 +74,16 @@ public class MoradorService {
 
     //Get padrão
     @Transactional(readOnly = true)
-    public List<DadosConsultaMoradorDTO> listarTodas() {
+    public List<DadosConsultaMoradorDTO> listarTodasMoradores() {
         return usuarioRepository.findAll().stream()
-                .filter(usuario -> usuario.getPessoa().getPerfilMorador() != null)
+                .filter(usuario -> usuario.getPessoa().getMorador() != null)
                 .map(DadosConsultaMoradorDTO::new)
                 .toList();
     }
 
     //Get por ID
     @Transactional(readOnly = true)
-    public DadosConsultaMoradorDTO buscarPorId(Long id) {
+    public DadosConsultaMoradorDTO buscarMoradorPorId(Long id) {
         Usuario morador = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
         return new DadosConsultaMoradorDTO(morador);

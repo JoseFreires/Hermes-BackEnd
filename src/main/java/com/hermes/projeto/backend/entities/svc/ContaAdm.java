@@ -20,6 +20,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import java.util.Collection;
+import java.util.List;
+
 
 @Entity(name = "ContaAdm")
 @Table(name = "conta_adm")
@@ -52,8 +55,18 @@ public class ContaAdm implements UserDetails{
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
     public String getPassword() {
         return senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 
     @Override

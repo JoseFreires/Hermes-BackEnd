@@ -21,13 +21,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "perfil_morador")
-public class PerfilMorador {
+@Table(name = "morador")
+public class Morador {
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idPerfilMorador")
+    @Column(name = "idMorador")
     private Long id;
 
     @Column(name = "data_chegada", nullable = false)
@@ -51,13 +51,13 @@ public class PerfilMorador {
     private Pessoa pessoa;
 
 
-    public PerfilMorador(DadosRegistrarMoradorDTO dados, Moradia moradia) {
+    public Morador(DadosRegistrarMoradorDTO dados, Moradia moradia) {
         this.dataChegada = dados.dataChegada();
         this.urlFoto = dados.fotoPerfil();
         this.moradia = moradia;
     }
 
-    public PerfilMorador(){
+    public Morador(){
         
     }
 

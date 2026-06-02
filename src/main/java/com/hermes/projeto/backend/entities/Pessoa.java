@@ -42,7 +42,7 @@ public class Pessoa {
     private String email;
 
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PerfilMorador perfilMorador;
+    private Morador morador;
 
 
 

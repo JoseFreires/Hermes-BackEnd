@@ -19,10 +19,10 @@ public class MoradorController {
     private MoradorService moradorService;
 
     @PostMapping
-    public ResponseEntity<DadosConsultaMoradorDTO> registrar(@Valid @RequestBody DadosRegistrarMoradorDTO dados,
+    public ResponseEntity<DadosConsultaMoradorDTO> registrarMorador(@Valid @RequestBody DadosRegistrarMoradorDTO dados,
                                                              UriComponentsBuilder uriBuilder) {
 
-        var moradorDto = moradorService.registrar(dados);
+        var moradorDto = moradorService.registrarMorador(dados);
         var uri = uriBuilder.path("/moradores/{id}").buildAndExpand(moradorDto.idUsuario()).toUri();
 
         return ResponseEntity.created(uri).body(moradorDto);
@@ -30,12 +30,12 @@ public class MoradorController {
 
     @GetMapping
     public ResponseEntity<List<DadosConsultaMoradorDTO>> listar() {
-        return ResponseEntity.ok(moradorService.listarTodas());
+        return ResponseEntity.ok(moradorService.listarTodasMoradores());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DadosConsultaMoradorDTO> detalhar(@PathVariable Long id) {
-        var detalhes = moradorService.buscarPorId(id);
+        var detalhes = moradorService.buscarMoradorPorId(id);
         return ResponseEntity.ok(detalhes);
     }
 }

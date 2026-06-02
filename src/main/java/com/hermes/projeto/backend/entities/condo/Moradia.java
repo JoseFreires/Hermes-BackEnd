@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hermes.projeto.backend.entities.PerfilMorador;
+import com.hermes.projeto.backend.entities.Morador;
 
 @Entity
 @Table(name = "moradia")
@@ -34,5 +34,5 @@ public class Moradia {
     // Uma moradia pode ter vários moradores (família, inquilinos)
     // O 'mappedBy' aponta para o nome do atributo 'moradia' dentro da classe Morador
     @OneToMany(mappedBy = "moradia")
-    private List<PerfilMorador> moradores = new ArrayList<>();
+    private List<Morador> moradores = new ArrayList<>();
 }

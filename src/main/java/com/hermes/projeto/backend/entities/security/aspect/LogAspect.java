@@ -43,6 +43,15 @@ public class LogAspect {
             && auth.getPrincipal() instanceof Usuario) {
 
             usuario = (Usuario) auth.getPrincipal();
+            
+            boolean ehMorador = usuario.getAuthorities()
+                    .stream()
+                    .anyMatch(a -> a.getAuthority().equals("ROLE_MORADOR"));
+
+                if (ehMorador) {
+                    return;
+                }
+
         }
 
         String metodo = request.getMethod();

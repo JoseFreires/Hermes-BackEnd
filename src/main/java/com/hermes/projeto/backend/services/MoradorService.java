@@ -1,19 +1,25 @@
 package com.hermes.projeto.backend.services;
 
-import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.Morador;
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.condo.Moradia;
-import com.hermes.projeto.backend.entities.security.Papel;
-import com.hermes.projeto.backend.entities.security.Usuario;
-import com.hermes.projeto.backend.repository.*;
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.hermes.projeto.backend.dto.DadosConsultaMoradorDTO;
+import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
+import com.hermes.projeto.backend.entities.Morador;
+import com.hermes.projeto.backend.entities.Pessoa;
+import com.hermes.projeto.backend.entities.condo.Moradia;
+import com.hermes.projeto.backend.entities.security.Papel;
+import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.repository.MoradiaRepository;
+import com.hermes.projeto.backend.repository.PapelRepository;
+import com.hermes.projeto.backend.repository.PessoaRepository;
+import com.hermes.projeto.backend.repository.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class MoradorService {
@@ -63,7 +69,7 @@ public class MoradorService {
         usuario.setPessoa(pessoa);
 
         //Inserindo Role Morador
-        usuario.getPapeis().add(papelMorador);
+        usuario.setPapel(papelMorador);
 
         //Salva Usuario
         usuarioRepository.save(usuario);

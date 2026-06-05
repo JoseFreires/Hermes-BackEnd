@@ -2,8 +2,6 @@ package com.hermes.projeto.backend.services;
 
 import java.util.List;
 
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,8 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
 import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
 import com.hermes.projeto.backend.entities.Encomenda;
+import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.entities.security.Usuario;
 import com.hermes.projeto.backend.repository.EncomendaRepository;
+import com.hermes.projeto.backend.repository.PessoaRepository;
 import com.hermes.projeto.backend.repository.UsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -40,9 +40,7 @@ public class PortariaService {
         var porteiro = usuarioRepository.findById(logado.getId())
             .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
 
-        boolean ePorteiro = porteiro.getPapeis().stream()
-            .anyMatch(p -> p.getNomePapel().equals("ROLE_PORTEIRO"));
-
+        boolean ePorteiro = porteiro.getPapel().getNomePapel().equals("ROLE_PORTEIRO"); 
         if (!ePorteiro) {
             throw new RuntimeException("Apenas usuários com papel de porteiro podem registrar encomendas");
         }

@@ -82,6 +82,20 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+-- Table `hermes_db`.`papel`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `hermes_db`.`papel` (
+  `idPapel` INT NOT NULL AUTO_INCREMENT,
+  `nome_papel` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idPapel`),
+  UNIQUE INDEX `nome_papel_UNIQUE` (`nome_papel` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
 -- Table `hermes_db`.`usuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hermes_db`.`usuario` (
@@ -89,13 +103,20 @@ CREATE TABLE IF NOT EXISTS `hermes_db`.`usuario` (
   `username` VARCHAR(100) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
   `Pessoa_idPessoa` INT NOT NULL,
+  `papel_idPapel` INT NOT NULL,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   INDEX `fk_usuario_pessoa_idx` (`Pessoa_idPessoa` ASC) VISIBLE,
+  INDEX `fk_usuario_papel1_idx` (`papel_idPapel` ASC) VISIBLE,
   CONSTRAINT `fk_usuario_pessoa`
     FOREIGN KEY (`Pessoa_idPessoa`)
     REFERENCES `hermes_db`.`pessoa` (`idPessoa`)
-    ON DELETE CASCADE)
+    ON DELETE CASCADE,
+  CONSTRAINT `fk_usuario_papel1`
+    FOREIGN KEY (`papel_idPapel`)
+    REFERENCES `hermes_db`.`papel` (`idPapel`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -216,20 +237,6 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `hermes_db`.`papel`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `hermes_db`.`papel` (
-  `idPapel` INT NOT NULL AUTO_INCREMENT,
-  `nome_papel` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idPapel`),
-  UNIQUE INDEX `nome_papel_UNIQUE` (`nome_papel` ASC) VISIBLE)
-ENGINE = InnoDB
-AUTO_INCREMENT = 5
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
 -- Table `hermes_db`.`morador`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hermes_db`.`morador` (
@@ -242,36 +249,12 @@ CREATE TABLE IF NOT EXISTS `hermes_db`.`morador` (
   PRIMARY KEY (`idMorador`),
   INDEX `fk_morador_pessoa1_idx` (`pessoa_idPessoa` ASC) VISIBLE,
   INDEX `fk_morador_moradia1_idx` (`moradia_idMoradia` ASC) VISIBLE,
-  CONSTRAINT `fk_morador_pessoa1`
-    FOREIGN KEY (`pessoa_idPessoa`)
-    REFERENCES `hermes_db`.`pessoa` (`idPessoa`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_morador_moradia1`
     FOREIGN KEY (`moradia_idMoradia`)
-    REFERENCES `hermes_db`.`moradia` (`idMoradia`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `hermes_db`.`porteiro`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `hermes_db`.`porteiro` (
-  `idPorteiro` INT NOT NULL AUTO_INCREMENT,
-  `turno` ENUM('MANHA', 'TARDE', 'NOITE') NOT NULL,
-  `empresa_responsavel` VARCHAR(45) NOT NULL,
-  `pessoa_idPessoa` INT NOT NULL,
-  PRIMARY KEY (`idPorteiro`),
-  INDEX `fk_porteiro_pessoa1_idx` (`pessoa_idPessoa` ASC) VISIBLE,
-  CONSTRAINT `fk_porteiro_pessoa1`
+    REFERENCES `hermes_db`.`moradia` (`idMoradia`),
+  CONSTRAINT `fk_morador_pessoa1`
     FOREIGN KEY (`pessoa_idPessoa`)
-    REFERENCES `hermes_db`.`pessoa` (`idPessoa`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `hermes_db`.`pessoa` (`idPessoa`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -289,30 +272,30 @@ CREATE TABLE IF NOT EXISTS `hermes_db`.`pessoa_autorizada` (
   INDEX `fk_pessoa_autorizada_morador1_idx` (`morador_idMorador` ASC) VISIBLE,
   CONSTRAINT `fk_pessoa_autorizada_morador1`
     FOREIGN KEY (`morador_idMorador`)
-    REFERENCES `hermes_db`.`morador` (`idMorador`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `hermes_db`.`morador` (`idMorador`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `hermes_db`.`usuario_papel`
+-- Table `hermes_db`.`porteiro`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `hermes_db`.`usuario_papel` (
-  `Usuario_idUsuario` INT NOT NULL,
-  `Papel_idPapel` INT NOT NULL,
-  PRIMARY KEY (`Usuario_idUsuario`, `Papel_idPapel`),
-  INDEX `fk_up_papel` (`Papel_idPapel` ASC) VISIBLE,
-  CONSTRAINT `fk_up_papel`
-    FOREIGN KEY (`Papel_idPapel`)
-    REFERENCES `hermes_db`.`papel` (`idPapel`)
-    ON DELETE CASCADE,
-  CONSTRAINT `fk_up_usuario`
-    FOREIGN KEY (`Usuario_idUsuario`)
-    REFERENCES `hermes_db`.`usuario` (`idUsuario`)
-    ON DELETE CASCADE)
+CREATE TABLE IF NOT EXISTS `hermes_db`.`porteiro` (
+  `idPorteiro` INT NOT NULL AUTO_INCREMENT,
+  `turno` ENUM('MANHA', 'TARDE', 'NOITE') NOT NULL,
+  `empresa_responsavel` VARCHAR(45) NOT NULL,
+  `pessoa_idPessoa` INT NOT NULL,
+  PRIMARY KEY (`idPorteiro`),
+  INDEX `fk_porteiro_pessoa1_idx` (`pessoa_idPessoa` ASC) VISIBLE,
+  CONSTRAINT `fk_porteiro_pessoa1`
+    FOREIGN KEY (`pessoa_idPessoa`)
+    REFERENCES `hermes_db`.`pessoa` (`idPessoa`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

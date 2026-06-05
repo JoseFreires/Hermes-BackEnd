@@ -1,14 +1,13 @@
 package com.hermes.projeto.backend.entities.security;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import com.hermes.projeto.backend.dto.DadosLoginDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.hermes.projeto.backend.dto.DadosLoginDTO;
 import com.hermes.projeto.backend.entities.Pessoa;
 
 import jakarta.persistence.Column;
@@ -18,8 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -47,21 +45,11 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "Pessoa_idPessoa", nullable = false)
     private Pessoa pessoa;
 
-    // Relacionamento Many-to-Many com Papel
-    // Isso cria a tabela de ligação 'usuario_papel' automaticamente
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "usuario_papel",
-        joinColumns = @JoinColumn(name = "Usuario_idUsuario"),
-        inverseJoinColumns = @JoinColumn(name = "Papel_idPapel")
-    )
-
-
-    private Set<Papel> papeis = new HashSet<>();
-
-    /* Usamos Set em vez de List para evitar papéis duplicados 
-       e FetchType.EAGER para que os papéis venham carregados no login.
-    */
+    // Relacionamento Many-to-One com Papel
+    // Muitos usuários podem ter o mesmo papel
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "Papel_idPapel")
+    private Papel papel;
 
     public Usuario(DadosLoginDTO dados, String senhaCriptografada) {
         this.username = dados.username();
@@ -74,9 +62,10 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return papeis.stream()
-            .map(papel -> new SimpleGrantedAuthority(papel.getNomePapel()))
-            .toList();
+        if (papel != null) {
+            return List.of(new SimpleGrantedAuthority(papel.getNomePapel()));
+        }
+        return List.of();
     }
 
     @Override

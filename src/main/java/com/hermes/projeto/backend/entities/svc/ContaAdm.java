@@ -1,27 +1,23 @@
 package com.hermes.projeto.backend.entities.svc;
 
 
-import com.hermes.projeto.backend.dto.DadosLoginDTO;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
+import com.hermes.projeto.backend.dto.DadosLoginDTO;
+import com.hermes.projeto.backend.entities.security.Papel;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
-import java.util.Collection;
-import java.util.List;
 
 
 @Entity(name = "ContaAdm")
@@ -44,6 +40,8 @@ public class ContaAdm implements UserDetails{
 
     private Boolean ativo;
 
+    private Set<Papel> papeis = new HashSet<>();
+
    
     public ContaAdm(DadosLoginDTO dados, String senhaCriptografada) {
         this.username = dados.username();
@@ -56,17 +54,14 @@ public class ContaAdm implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return papeis.stream()
+            .map(papel -> new SimpleGrantedAuthority(papel.getNomePapel()))
+            .toList();
     }
 
     @Override
     public String getPassword() {
         return senha;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override
@@ -87,6 +82,11 @@ public class ContaAdm implements UserDetails{
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getUsername() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

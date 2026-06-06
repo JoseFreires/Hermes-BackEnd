@@ -2,6 +2,7 @@ package com.hermes.projeto.backend.entities.security.config;
 
 import java.io.IOException;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,15 +51,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private String recuperarToken(HttpServletRequest request){
 
-       var authorizationHeader =  request.getHeader("Authorization");
-    
-        if(authorizationHeader != null){
-            return authorizationHeader.substring(7);
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+
+            for (Cookie cookie : cookies) {
+                if ("jwtToken".equals(cookie.getName())) {
+
+                    return cookie.getValue();
+                }
+            }
         }
-       
-       return null;
+        return null;
     }
-    
-    
-       
 }

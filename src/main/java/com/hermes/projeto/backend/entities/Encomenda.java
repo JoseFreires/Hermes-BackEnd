@@ -71,14 +71,14 @@ public class Encomenda {
     private Pessoa moradorDestinatario;
 
     // Construtor atualizado
-    public Encomenda(DadosRegistrarEncomendaDTO dados, Usuario porteiro, Pessoa moradorDestinatario) {
+    public Encomenda(DadosRegistrarEncomendaDTO dados, Usuario porteiro, Pessoa moradorDestinatario, String token) {
         this.nomePacote = dados.nomePacote();
         this.dataHoraRecebido = LocalDateTime.now();
         this.statusEncomenda = StatusEncomenda.RECEBIDA;
-        this.token = dados.token(); // Sua lógica de token
         this.porteiro = porteiro;
         this.moradorDestinatario = moradorDestinatario;
         this.fotoEncomenda = dados.foto();
+        this.token = token;
     }
 
 }

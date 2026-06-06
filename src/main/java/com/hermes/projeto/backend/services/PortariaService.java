@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.services;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,12 @@ public class PortariaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    private String gerarTokenEncomenda(){
+        SecureRandom random = new SecureRandom();
+        int tokenEncomenda = random.nextInt(10000);
+        return String.format("%04d", tokenEncomenda);
+    }
+
     @Transactional
     public DadosConsultaEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
         // 1. Busca destinatário (Morador)
@@ -45,8 +52,11 @@ public class PortariaService {
             throw new RuntimeException("Apenas usuários com papel de porteiro podem registrar encomendas");
         }
 
-        // 3. Cria e Salva
-        var encomenda = new Encomenda(dados, porteiro, morador);
+        //Gera o token aleatório
+        String tokenEncomenda = gerarTokenEncomenda();
+
+        //3. Cria e Salva
+        var encomenda = new Encomenda(dados, porteiro, morador, tokenEncomenda);
         repository.save(encomenda);
 
         // O SEGREDO: Converter para DTO AQUI dentro.

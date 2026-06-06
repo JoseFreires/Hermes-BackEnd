@@ -28,10 +28,6 @@ public record DadosRegistrarEncomendaDTO(
     @NotNull(message = "O ID do destinatário é obrigatório")
     Long idDestinatario,
 
-
-    @NotBlank(message = "O tipo de retirada é obrigatório")
-    String token, // Opcional
-
     String  observacao
 ) {
 }

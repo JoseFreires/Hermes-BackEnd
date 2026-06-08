@@ -9,8 +9,6 @@ public record DadosAtualizacaoEncomendaDTO(
 
     String observacao,
 
-    //Incluindo email para ligação se atualizar
-    @NotBlank(message = "O email do usuario é obrigatório")
-    String emailDestinatario
+    Long idDestinatario
 
 ){}

@@ -41,7 +41,7 @@ public class PortariaService {
     }
 
     @Transactional
-    public DadosConsultaEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
+    public DadosConsultaEncomendaDTO registrarEncomenda(DadosRegistrarEncomendaDTO dados, Usuario logado) {
         // 1. Busca destinatário (Morador)
         Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
@@ -69,7 +69,7 @@ public class PortariaService {
     }
 
     @Transactional(readOnly = true)
-    public List<DadosConsultaEncomendaDTO> listarTodas() {
+    public List<DadosConsultaEncomendaDTO> listarTodasEncomendas() {
         // Usando o stream aqui dentro do Transactional também resolve para a lista
         return repository.findAll().stream()
                 .map(DadosConsultaEncomendaDTO::new)
@@ -77,7 +77,7 @@ public class PortariaService {
     }
 
     @Transactional(readOnly = true)
-    public DadosConsultaEncomendaDTO buscarPorId(Long id) {
+    public DadosConsultaEncomendaDTO buscarEncomendaPorId(Long id) {
         var encomenda = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
         return new DadosConsultaEncomendaDTO(encomenda);

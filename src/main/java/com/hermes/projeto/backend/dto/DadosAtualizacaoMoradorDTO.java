@@ -20,6 +20,12 @@ public record DadosAtualizacaoMoradorDTO(
         Long pessoaIdPessoa,
 
         @NotNull(message = "O ID da moradia é obrigatório")
-        Long moradiaIdMoradia
+        Long moradiaIdMoradia,
+
+        String nomeCompleto,
+
+        String telefone,
+
+        LocalDate dataNascimento
 ) {
 }

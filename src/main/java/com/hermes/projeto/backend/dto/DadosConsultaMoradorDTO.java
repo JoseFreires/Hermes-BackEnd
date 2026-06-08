@@ -19,7 +19,7 @@ public record DadosConsultaMoradorDTO(
     // Construtor
     public DadosConsultaMoradorDTO(Usuario usuario) {
         this(
-                usuario.getId(),
+                usuario.getPessoa().getMorador().getId(),
                 usuario.getPessoa().getNomeCompleto(),
                 usuario.getPessoa().getEmail(),
                 usuario.getPessoa().getMorador().getMoradia().getNumero(),

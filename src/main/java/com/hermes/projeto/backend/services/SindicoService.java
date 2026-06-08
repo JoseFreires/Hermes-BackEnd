@@ -1,23 +1,21 @@
 package com.hermes.projeto.backend.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hermes.projeto.backend.dto.*;
+import com.hermes.projeto.backend.entities.Porteiro;
+import com.hermes.projeto.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.dto.DadosConsultaMoradorDTO;
-import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
 import com.hermes.projeto.backend.entities.Morador;
 import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.entities.condo.Moradia;
 import com.hermes.projeto.backend.entities.security.Papel;
 import com.hermes.projeto.backend.entities.security.Usuario;
-import com.hermes.projeto.backend.repository.MoradiaRepository;
-import com.hermes.projeto.backend.repository.PapelRepository;
-import com.hermes.projeto.backend.repository.PessoaRepository;
-import com.hermes.projeto.backend.repository.UsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -39,6 +37,7 @@ public class SindicoService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //POST Morador
     @Transactional
     public DadosConsultaMoradorDTO registrarMorador(DadosRegistrarMoradorDTO dados) {
 
@@ -78,7 +77,8 @@ public class SindicoService {
         return new DadosConsultaMoradorDTO(usuario);
     }
 
-    //Get padrão
+
+    //GET List Morador
     @Transactional(readOnly = true)
     public List<DadosConsultaMoradorDTO> listarTodasMoradores() {
         return usuarioRepository.findAll().stream()
@@ -87,12 +87,165 @@ public class SindicoService {
                 .toList();
     }
 
-    //Get por ID
+    //GET Morador por ID
     @Transactional(readOnly = true)
     public DadosConsultaMoradorDTO buscarMoradorPorId(Long id) {
         Usuario morador = usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
         return new DadosConsultaMoradorDTO(morador);
+    }
+
+    //PUT Morador
+    @Transactional
+    public DadosConsultaMoradorDTO editarMorador(Long idUsuario, DadosAtualizacaoMoradorDTO dados){
+
+
+        var usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado!"));
+
+
+        var pessoa = usuario.getPessoa();
+        var morador = pessoa.getMorador();
+
+        if(dados.fotoPerfil() != null){
+            morador.setUrlFoto(dados.fotoPerfil());
+        }
+
+        if(dados.moradiaIdMoradia() != null){
+            var novaMoradia = moradiaRepository.findById(dados.moradiaIdMoradia())
+                    .orElseThrow(() -> new EntityNotFoundException("Nova moradia não encontrada!"));
+            morador.setMoradia(novaMoradia);
+        }
+
+        if(dados.nomeCompleto() != null){
+            pessoa.setNomeCompleto(dados.nomeCompleto());
+        }
+
+        if(dados.dataNascimento() != null){
+            pessoa.setDataNascimento(dados.dataNascimento());
+        }
+
+        if(dados.telefone() != null){
+            pessoa.setTelefone(dados.telefone());
+        }
+
+        // O Hibernate salva tudo (Pessoa e Morador) automaticamente ao final da transação.
+        return new DadosConsultaMoradorDTO(usuario);
+    }
+
+    //"DELETE" Morador
+    @Transactional
+    public void desativarMorador(Long id){
+
+        var UsuarioMorador = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado."));
+
+        var pessoaMorador = UsuarioMorador.getPessoa();
+        pessoaMorador.setAtivo(false);
+        pessoaMorador.getMorador().setDataSaida(LocalDateTime.now());
+
+        pessoaRepository.save(pessoaMorador);
+    }
+
+
+    //POST Porteiro
+    @Transactional
+    public DadosConsultaPorteiroDTO registrarPorteiro(DadosRegistrarPorteiroDTO dados){
+
+        //Busca Papel Porteiro
+        Papel papelPorteiro = papelRepository.findByNomePapel("ROLE_PORTEIRO")
+                .orElseThrow(() -> new EntityNotFoundException("O papel ROLE_PORTEIRO não está configurado no banco."));
+
+        Pessoa pessoa = new Pessoa(dados.pessoa());
+
+        Porteiro porteiro = new Porteiro(dados);
+
+        porteiro.setPessoa(pessoa);
+        pessoa.setPorteiro(porteiro);
+        pessoaRepository.save(pessoa);
+
+        String senhaCodificada = passwordEncoder.encode(dados.usuario().senha());
+        Usuario usuario = new Usuario(dados.usuario(), senhaCodificada);
+
+        //Colocando navegabilidade
+        usuario.setPessoa(pessoa);
+
+        //Inserindo Role porteiro
+        usuario.setPapel(papelPorteiro);
+
+        //Salva Usuario
+        usuarioRepository.save(usuario);
+
+        return new DadosConsultaPorteiroDTO(usuario);
+    }
+
+
+    //GET List Porteiro
+    @Transactional(readOnly = true)
+    public List<DadosConsultaPorteiroDTO> listarTodosPorteiros() {
+        return usuarioRepository.findAll().stream()
+                .filter(usuario -> usuario.getPessoa().getPorteiro() != null)
+                .map(DadosConsultaPorteiroDTO::new)
+                .toList();
+    }
+
+    //GET Porteiro por Id
+    @Transactional(readOnly = true)
+    public DadosConsultaPorteiroDTO buscarPorteiroPorId(Long id) {
+        var porteiro = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrada"));
+        return new DadosConsultaPorteiroDTO(porteiro);
+    }
+
+
+    //PUT Porteiro
+    @Transactional
+    public DadosConsultaPorteiroDTO editarPorteiro(Long idUsuario, DadosAtualizacaoPorteiroDTO dados){
+
+
+        var usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado!"));
+
+
+        var pessoa = usuario.getPessoa();
+        var porteiro = pessoa.getPorteiro();
+
+        if(dados.empresaResponsavel() != null){
+            porteiro.setEmpresaResponsavel(dados.empresaResponsavel());
+        }
+
+        if (dados.turno() != null) {
+            porteiro.setTurno(dados.turno());
+        }
+
+        if(dados.nomeCompleto() != null){
+            pessoa.setNomeCompleto(dados.nomeCompleto());
+        }
+
+        if(dados.dataNascimento() != null){
+            pessoa.setDataNascimento(dados.dataNascimento());
+        }
+
+        if(dados.telefone() != null){
+            pessoa.setTelefone(dados.telefone());
+        }
+
+        // O Hibernate salva tudo (Pessoa e Porteiro) automaticamente ao final da transação.
+        return new DadosConsultaPorteiroDTO(usuario);
+    }
+
+
+    //"DELETE" Porteiro
+    @Transactional
+    public void desativarPorteiro(Long id){
+
+        var UsuarioPorteiro = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado."));
+
+        var pessoaPorteiro = UsuarioPorteiro.getPessoa();
+        pessoaPorteiro.setAtivo(false);
+
+        pessoaRepository.save(pessoaPorteiro);
     }
 
 

@@ -1,6 +1,7 @@
 package com.hermes.projeto.backend.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
 import com.hermes.projeto.backend.entities.condo.Moradia;
@@ -34,7 +35,7 @@ public class Morador {
     private LocalDate dataChegada;
 
     @Column(name = "data_saida")
-    private LocalDate dataSaida;
+    private LocalDateTime dataSaida;
 
     // Conforme discutimos, a foto é uma URL (String)
     @Column(name = "foto_perfil")

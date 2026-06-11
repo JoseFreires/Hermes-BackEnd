@@ -1,8 +1,12 @@
 package com.hermes.projeto.backend.services;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.hermes.projeto.backend.dto.DadosAtualizacaoEncomendaDTO;
+import com.hermes.projeto.backend.dto.DadosAtualizarStatusEncomendaDTO;
+import com.hermes.projeto.backend.enums.StatusEncomenda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +41,7 @@ public class PortariaService {
     }
 
     @Transactional
-    public DadosConsultaEncomendaDTO registrar(DadosRegistrarEncomendaDTO dados, Usuario logado) {
+    public DadosConsultaEncomendaDTO registrarEncomenda(DadosRegistrarEncomendaDTO dados, Usuario logado) {
         // 1. Busca destinatário (Morador)
         Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
@@ -65,7 +69,7 @@ public class PortariaService {
     }
 
     @Transactional(readOnly = true)
-    public List<DadosConsultaEncomendaDTO> listarTodas() {
+    public List<DadosConsultaEncomendaDTO> listarTodasEncomendas() {
         // Usando o stream aqui dentro do Transactional também resolve para a lista
         return repository.findAll().stream()
                 .map(DadosConsultaEncomendaDTO::new)
@@ -73,9 +77,64 @@ public class PortariaService {
     }
 
     @Transactional(readOnly = true)
-    public DadosConsultaEncomendaDTO buscarPorId(Long id) {
+    public DadosConsultaEncomendaDTO buscarEncomendaPorId(Long id) {
         var encomenda = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
         return new DadosConsultaEncomendaDTO(encomenda);
+    }
+
+
+    @Transactional
+    public void registrarEntregaEncomenda(Long idEncomenda, DadosAtualizarStatusEncomendaDTO dados) {
+
+        var encomenda = repository.findById(idEncomenda)
+                .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
+
+        // Evita duplo clique ou entrega acidental de algo já entregue
+        if (encomenda.getStatusEncomenda() == StatusEncomenda.RETIRADA) {
+            throw new RuntimeException("Esta encomenda já consta como Retirada!");
+        }
+
+        // Executa a transição de ENUM
+        encomenda.setStatusEncomenda(StatusEncomenda.RETIRADA);
+        encomenda.setDataHoraRetirado(LocalDateTime.now());
+        encomenda.setTipoRetirada(dados.tipoRetirada());
+
+        repository.save(encomenda);
+    }
+
+    @Transactional
+    public void editarEncomenda(Long id, DadosAtualizacaoEncomendaDTO dados) {
+
+        var encomenda = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
+
+        if (dados.observacao() != null) {
+            encomenda.setObservacao(dados.observacao());
+        }
+
+        if (dados.nomePacote() != null) {
+            encomenda.setNomePacote(dados.nomePacote());
+        }
+
+        if (dados.idDestinatario() != null) {
+
+            // Busca a nova pessoa no banco
+            var novoDestinatario = pessoaRepository.findById(dados.idDestinatario())
+                    .orElseThrow(() -> new RuntimeException("Novo destinatário não encontrado no sistema!"));
+
+            encomenda.setMoradorDestinatario(novoDestinatario);
+        }
+
+        repository.save(encomenda);
+    }
+
+
+    @Transactional
+    public void deletarEncomendaPorId(Long id){
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("A encomenda informada não existe.");
+        }
+        repository.deleteById(id);
     }
 }

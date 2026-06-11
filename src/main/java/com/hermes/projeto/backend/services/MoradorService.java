@@ -1,97 +1,92 @@
 package com.hermes.projeto.backend.services;
 
-import java.util.List;
-
+import com.hermes.projeto.backend.dto.*;
+import com.hermes.projeto.backend.entities.PessoaAutorizada;
+import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.repository.MoradorRepository;
+import com.hermes.projeto.backend.repository.PessoaAutorizadaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.dto.DadosConsultaMoradorDTO;
-import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
-import com.hermes.projeto.backend.entities.Morador;
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.condo.Moradia;
-import com.hermes.projeto.backend.entities.security.Papel;
-import com.hermes.projeto.backend.entities.security.Usuario;
-import com.hermes.projeto.backend.repository.MoradiaRepository;
-import com.hermes.projeto.backend.repository.PapelRepository;
-import com.hermes.projeto.backend.repository.PessoaRepository;
-import com.hermes.projeto.backend.repository.UsuarioRepository;
-
-import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class MoradorService {
 
     @Autowired
-    private PessoaRepository pessoaRepository;
+    private MoradorRepository moradorRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private PessoaAutorizadaRepository pessoaAutorizadaRepository;
 
-    @Autowired
-    private MoradiaRepository moradiaRepository;
 
-    @Autowired
-    private PapelRepository papelRepository;
+    //CRUD Pessoa Autorizada
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    //POST
     @Transactional
-    public DadosConsultaMoradorDTO registrarMorador(DadosRegistrarMoradorDTO dados) {
+    public DadosConsultaPessoaAutorizadaDTO registrarPessoaAutorizada(DadosRegistrarPessoaAutorizadaDTO dados){
 
-        //Buscando a moradia para associar (como tinhaos falado nas reuniões moradia etc já vai ter cadastro)
-        Moradia moradia = moradiaRepository.findById(dados.idMoradia())
-                .orElseThrow(() -> new EntityNotFoundException("Moradia/Apartamento não encontrado no sistema."));
+        var morador = moradorRepository.findById(dados.moradorIdMorador())
+                .orElseThrow(() -> new EntityNotFoundException("Morador dono da autorização não encontrado."));
 
-        // Agora o papel é fixo então ele busca no banco
-        Papel papelMorador = papelRepository.findByNomePapel("ROLE_MORADOR")
-                .orElseThrow(() -> new EntityNotFoundException("O papel ROLE_MORADOR não está configurado no banco."));
+        var pessoaAutorizada = new PessoaAutorizada(dados, morador);
+        pessoaAutorizadaRepository.save(pessoaAutorizada);
+        return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
 
-        //Instancia de pessoa
-        Pessoa pessoa = new Pessoa(dados.pessoa());
-
-        //Instancia de Morador (Não é mais um papel)
-        Morador morador = new Morador(dados, moradia);
-
-        // Inserindo composição
-        morador.setPessoa(pessoa);
-        pessoa.setMorador(morador);
-        pessoaRepository.save(pessoa);
-
-        //Senha com a lógica do Rian de criptografia
-        String senhaCodificada = passwordEncoder.encode(dados.usuario().senha());
-        Usuario usuario = new Usuario(dados.usuario(), senhaCodificada);
-
-        //Colocando navegabilidade (como no diagrama)
-        usuario.setPessoa(pessoa);
-
-        //Inserindo Role Morador
-        usuario.setPapel(papelMorador);
-
-        //Salva Usuario
-        usuarioRepository.save(usuario);
-
-        // retorna o usuario completo
-        return new DadosConsultaMoradorDTO(usuario);
     }
 
-    //Get padrão
+    //GET Lista Pessoas Autorizadas
     @Transactional(readOnly = true)
-    public List<DadosConsultaMoradorDTO> listarTodasMoradores() {
-        return usuarioRepository.findAll().stream()
-                .filter(usuario -> usuario.getPessoa().getMorador() != null)
-                .map(DadosConsultaMoradorDTO::new)
+    public List<DadosConsultaPessoaAutorizadaDTO> listarTodasPessoasAutorizadas() {
+        return pessoaAutorizadaRepository.findAll().stream()
+                .filter(PessoaAutorizada::getAtivo)
+                .map(DadosConsultaPessoaAutorizadaDTO::new)
                 .toList();
     }
 
-    //Get por ID
+    //GET Pessoa Autorizada por ID
     @Transactional(readOnly = true)
-    public DadosConsultaMoradorDTO buscarMoradorPorId(Long id) {
-        Usuario morador = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
-        return new DadosConsultaMoradorDTO(morador);
+    public DadosConsultaPessoaAutorizadaDTO buscarPessoaAutorizadaPorId(Long id) {
+        PessoaAutorizada pessoaAutorizada = pessoaAutorizadaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pessoa autorizada não encontrada"));
+        return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
     }
+
+    //PUT Pessoa Autorizada
+    @Transactional
+    public DadosConsultaPessoaAutorizadaDTO editarPessoaAutorizada(DadosAtualizacaoPessoaAutorizadaDTO dados, Long idPessoaAutorizada){
+
+
+        var pessoaAutorizada = pessoaAutorizadaRepository.findById(idPessoaAutorizada)
+                .orElseThrow(() -> new EntityNotFoundException("Pessoa Autorizada não encontrada!"));
+
+
+
+        if(dados.cpf() != null){
+            pessoaAutorizada.setCpf(dados.cpf());
+        }
+
+        if(dados.nome() != null){
+            pessoaAutorizada.setNome(dados.nome());
+        }
+
+
+        // O Hibernate salva tudo (PessoaAutorizada) automaticamente ao final da transação.
+        return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
+    }
+
+    //"Delete" Pessoa Autorizada
+    @Transactional
+    public void desativarPessoaAutorizada(Long id){
+
+        var pessoaAutorizada = pessoaAutorizadaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pessoa Autorizada não encontrado."));
+
+        pessoaAutorizada.setAtivo(false);
+
+        pessoaAutorizadaRepository.save(pessoaAutorizada);
+    }
+
 }

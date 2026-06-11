@@ -33,7 +33,7 @@ public class EncomendaController {
                                     @AuthenticationPrincipal Usuario logado) {
         
         // Agora 'encomenda' já é um DadosListagemEncomendaDTO
-        var encomendaDto = portariaService.registrar(dados, logado);
+        var encomendaDto = portariaService.registrarEncomenda(dados, logado);
         
         // Em Records, acessamos o id apenas como .id() e não .getIdEncomenda()
         var uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomendaDto.id()).toUri();
@@ -44,12 +44,12 @@ public class EncomendaController {
 
     @GetMapping
     public ResponseEntity<List<DadosConsultaEncomendaDTO>> listar() {
-        return ResponseEntity.ok(portariaService.listarTodas());
+        return ResponseEntity.ok(portariaService.listarTodasEncomendas());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
-        var detalhes = portariaService.buscarPorId(id);
+        var detalhes = portariaService.buscarEncomendaPorId(id);
         return ResponseEntity.ok(detalhes);
     }
 }

@@ -44,6 +44,9 @@ public class Pessoa {
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Morador morador;
 
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Porteiro porteiro;
+
 
 
     public Pessoa(DadosRegistrarPessoaDTO dados) {

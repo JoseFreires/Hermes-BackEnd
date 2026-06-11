@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.entities;
 
+import com.hermes.projeto.backend.dto.DadosRegistrarPorteiroDTO;
 import com.hermes.projeto.backend.entities.security.Papel;
 import com.hermes.projeto.backend.enums.TurnoPorteiro;
 
@@ -34,7 +35,15 @@ public class Porteiro{
     @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
     private Pessoa pessoa;
 
-    /* Paralistar todas as encomendas que este porteiro 
+    public Porteiro(DadosRegistrarPorteiroDTO dados) {
+
+        this.empresaResponsavel = dados.empresaResponsavel();
+        this.turno = dados.turno();
+
+
+    }
+
+    /* Paralistar todas as encomendas que este porteiro
        recebeu, pode adicionar o mapeamento inverso aqui:
        
        @OneToMany(mappedBy = "porteiro")

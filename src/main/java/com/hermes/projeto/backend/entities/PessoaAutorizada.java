@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.entities;
 
+import com.hermes.projeto.backend.dto.DadosRegistrarPessoaAutorizadaDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor // Adicione isso
 @Table(name = "pessoa_autorizada")
 @Entity (name = "PessoaAutorizada")
-@EqualsAndHashCode (of = "id")
+@EqualsAndHashCode (of = "idPessoaAutorizada")
 @Getter
 @Setter
 public class PessoaAutorizada {
@@ -28,7 +29,17 @@ public class PessoaAutorizada {
         @Column(unique = true)
         private String cpf;
 
-        
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "morador_idMorador", nullable = false)
+        private Morador morador;
 
+        private Boolean ativo;
+
+        public PessoaAutorizada(DadosRegistrarPessoaAutorizadaDTO dados, Morador morador) {
+                this.nome = dados.nome();
+                this.cpf = dados.cpf();
+                this.morador = morador;
+                this.ativo = true;
+        }
 }
 

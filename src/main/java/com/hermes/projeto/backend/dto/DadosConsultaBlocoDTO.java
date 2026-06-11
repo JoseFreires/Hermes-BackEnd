@@ -1,5 +1,7 @@
 package com.hermes.projeto.backend.dto;
 
+import com.hermes.projeto.backend.entities.condo.Bloco;
+
 public record DadosConsultaBlocoDTO(
 
         Long idBloco,
@@ -10,4 +12,12 @@ public record DadosConsultaBlocoDTO(
 
         String nomeCondominio
 ) {
+    public DadosConsultaBlocoDTO(Bloco bloco) {
+        this(
+                bloco.getId(),
+                bloco.getNome_torre(),
+                bloco.getCondominio().getId(),
+                bloco.getCondominio().getNome_condominio()
+        );
+    }
 }

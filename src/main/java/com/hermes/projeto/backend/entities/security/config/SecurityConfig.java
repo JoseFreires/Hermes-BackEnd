@@ -32,42 +32,42 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             request.requestMatchers(HttpMethod.POST, "/login").permitAll();
          
             // ENCOMENDAS
-            request.requestMatchers(HttpMethod.POST, "/encomendas").hasRole("PORTEIRO");
-            request.requestMatchers(HttpMethod.GET, "/encomendas").hasAnyRole("PORTEIRO", "MORADOR", "SINDICO");
-            request.requestMatchers(HttpMethod.PUT, "/encomendas/**").hasRole("PORTEIRO");
-            request.requestMatchers(HttpMethod.PATCH, "/encomendas/**").hasRole("PORTEIRO");
-            request.requestMatchers(HttpMethod.DELETE, "/encomendas/**").hasRole("PORTEIRO");
+            request.requestMatchers(HttpMethod.POST, "/encomendas").hasAnyRole("PORTEIRO", "ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/encomendas").hasAnyRole("PORTEIRO", "MORADOR", "SINDICO", "ADMIN");
+            request.requestMatchers(HttpMethod.PUT, "/encomendas/**").hasAnyRole("PORTEIRO", "ADMIN");
+            request.requestMatchers(HttpMethod.PATCH, "/encomendas/**").hasAnyRole("PORTEIRO", "ADMIN");
+            request.requestMatchers(HttpMethod.DELETE, "/encomendas/**").hasAnyRole("PORTEIRO", "ADMIN");
 
             // MORADORES
-             request.requestMatchers(HttpMethod.POST, "/moradores").hasRole("PORTEIRO");
-            request.requestMatchers(HttpMethod.GET, "/moradores").hasAnyRole("PORTEIRO", "ADMIN");
-            request.requestMatchers(HttpMethod.GET, "/moradores/**").hasAnyRole("MORADOR", "PORTEIRO", "ADMIN");
-            request.requestMatchers(HttpMethod.PUT, "/moradores/**").hasRole("MORADOR");
-            request.requestMatchers(HttpMethod.DELETE, "/moradores/**").hasRole("ADMIN");
+             request.requestMatchers(HttpMethod.POST, "/moradores").hasAnyRole("SINDICO", "ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/moradores").hasAnyRole("SINDICO", "ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/moradores/**").hasAnyRole("MORADOR", "SINDICO", "ADMIN");
+            request.requestMatchers(HttpMethod.PUT, "/moradores/**").hasAnyRole("MORADOR");
+            request.requestMatchers(HttpMethod.DELETE, "/moradores/**").hasAnyRole("ADMIN", "SINDICO");
 
             // PESSOAS AUTORIZADAS
-            request.requestMatchers(HttpMethod.POST, "/pessoas-autorizadas").hasRole("MORADOR");
+            request.requestMatchers(HttpMethod.POST, "/pessoas-autorizadas").hasAnyRole("MORADOR");
             request.requestMatchers(HttpMethod.GET, "/pessoas-autorizadas").hasAnyRole("MORADOR", "PORTEIRO", "ADMIN");
-            request.requestMatchers(HttpMethod.PUT, "/pessoas-autorizadas/**").hasRole("MORADOR");
-            request.requestMatchers(HttpMethod.DELETE, "/pessoas-autorizadas/**").hasRole("MORADOR");
+            request.requestMatchers(HttpMethod.PUT, "/pessoas-autorizadas/**").hasAnyRole("MORADOR");
+            request.requestMatchers(HttpMethod.DELETE, "/pessoas-autorizadas/**").hasAnyRole("MORADOR");
 
             // CONDOMINIOS
-            request.requestMatchers(HttpMethod.GET, "/condominios").hasAnyRole("ADMIN", "PORTEIRO");
-            request.requestMatchers(HttpMethod.POST, "/condominios").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.PUT, "/condominios/**").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.DELETE, "/condominios/**").hasRole("ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/condominios").hasAnyRole("ADMIN", "SINDICO");
+            request.requestMatchers(HttpMethod.POST, "/condominios").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.PUT, "/condominios/**").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.DELETE, "/condominios/**").hasAnyRole("ADMIN");
 
             // BLOCOS
-            request.requestMatchers(HttpMethod.GET, "/blocos").hasAnyRole("ADMIN", "PORTEIRO");
-            request.requestMatchers(HttpMethod.POST, "/blocos").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.PUT, "/blocos/**").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.DELETE, "/blocos/**").hasRole("ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/blocos").hasAnyRole("ADMIN", "SINDICO");
+            request.requestMatchers(HttpMethod.POST, "/blocos").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.PUT, "/blocos/**").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.DELETE, "/blocos/**").hasAnyRole("ADMIN");
 
             // MORADIAS
-            request.requestMatchers(HttpMethod.GET, "/moradias").hasAnyRole("ADMIN",  "PORTEIRO");
-            request.requestMatchers(HttpMethod.POST, "/moradias").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.PUT, "/moradias/**").hasRole("ADMIN");
-            request.requestMatchers(HttpMethod.DELETE, "/moradias/**").hasRole("ADMIN");
+            request.requestMatchers(HttpMethod.GET, "/moradias").hasAnyRole("ADMIN", "SINDICO");
+            request.requestMatchers(HttpMethod.POST, "/moradias").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.PUT, "/moradias/**").hasAnyRole("ADMIN");
+            request.requestMatchers(HttpMethod.DELETE, "/moradias/**").hasAnyRole("ADMIN");
 
             // LOGS
             request.requestMatchers(HttpMethod.GET, "/logs").hasAnyRole("ADMIN");

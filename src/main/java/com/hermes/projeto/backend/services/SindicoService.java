@@ -28,14 +28,24 @@ public class SindicoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private MoradiaRepository moradiaRepository;
 
     @Autowired
     private PapelRepository papelRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CondominioRepository condominioRepository;
+
+    @Autowired
+    private BlocoRepository blocoRepository;
+
+    @Autowired
+    private MoradiaRepository moradiaRepository;
+
+
+    //CRUD PORTEIRO
 
     //POST Morador
     @Transactional
@@ -148,6 +158,11 @@ public class SindicoService {
     }
 
 
+
+
+
+    //CRUD PORTEIRO
+
     //POST Porteiro
     @Transactional
     public DadosConsultaPorteiroDTO registrarPorteiro(DadosRegistrarPorteiroDTO dados){
@@ -249,4 +264,46 @@ public class SindicoService {
     }
 
 
+
+    //CONSULTA CONDOMINIAL
+
+    //GET Condominio
+    @Transactional(readOnly = true)
+    public DadosConsultaCondominioDTO buscarCondominioPorId(Long id) {
+        var condominio = condominioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("condominio não encontrado"));
+        return new DadosConsultaCondominioDTO(condominio);
+    }
+
+
+    //GET lista Bloco
+    @Transactional(readOnly = true)
+    public List<DadosConsultaBlocoDTO> listarTodosBlocos() {
+        return blocoRepository.findAll().stream()
+                .map(DadosConsultaBlocoDTO::new)
+                .toList();
+    }
+
+    //GET Bloco por ID
+    @Transactional(readOnly = true)
+    public DadosConsultaBlocoDTO buscarBlocoPorId(Long id) {
+        var bloco = blocoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Bloco não encontrado"));
+        return new DadosConsultaBlocoDTO(bloco);
+    }
+
+    //GET lista Moradias
+    @Transactional(readOnly = true)
+    public List<DadosConsultaMoradiaDTO> listarTodasMoradias() {
+        return moradiaRepository.findAll().stream()
+                .map(DadosConsultaMoradiaDTO::new)
+                .toList();
+    }
+    //GET Moradia por ID
+    @Transactional(readOnly = true)
+    public DadosConsultaMoradiaDTO buscarMoradiaPorId(Long id) {
+        var moradia = moradiaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Moradia não encontrada"));
+        return new DadosConsultaMoradiaDTO(moradia);
+    }
 }

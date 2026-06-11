@@ -2,6 +2,7 @@ package com.hermes.projeto.backend.dto;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.hermes.projeto.backend.entities.security.Usuario;
 
@@ -14,7 +15,8 @@ public record DadosConsultaMoradorDTO(
         LocalDate dataChegada,
         LocalDate nascimento,
         String foto,
-        String telefone
+        String telefone,
+        List<DadosConsultaPessoaAutorizadaDTO>pessoasAutorizadas
 ) {
     // Construtor
     public DadosConsultaMoradorDTO(Usuario usuario) {
@@ -27,7 +29,10 @@ public record DadosConsultaMoradorDTO(
                 usuario.getPessoa().getMorador().getDataChegada(),
                 usuario.getPessoa().getDataNascimento(),
                 usuario.getPessoa().getMorador().getUrlFoto(),
-                usuario.getPessoa().getTelefone()
+                usuario.getPessoa().getTelefone(),
+                usuario.getPessoa().getMorador().getPessoasAutorizadas().stream()
+                        .map(DadosConsultaPessoaAutorizadaDTO::new)
+                        .toList()
 
         );
     }

@@ -92,7 +92,8 @@ public class SindicoService {
     @Transactional(readOnly = true)
     public List<DadosConsultaMoradorDTO> listarTodasMoradores() {
         return usuarioRepository.findAll().stream()
-                .filter(usuario -> usuario.getPessoa().getMorador() != null)
+                .filter(usuario -> usuario.getPessoa().getMorador() != null &&
+                        Boolean.TRUE.equals(usuario.getPessoa().getAtivo()))
                 .map(DadosConsultaMoradorDTO::new)
                 .toList();
     }
@@ -199,7 +200,8 @@ public class SindicoService {
     @Transactional(readOnly = true)
     public List<DadosConsultaPorteiroDTO> listarTodosPorteiros() {
         return usuarioRepository.findAll().stream()
-                .filter(usuario -> usuario.getPessoa().getPorteiro() != null)
+                .filter(usuario -> usuario.getPessoa().getPorteiro() != null &&
+                        Boolean.TRUE.equals(usuario.getPessoa().getAtivo()))
                 .map(DadosConsultaPorteiroDTO::new)
                 .toList();
     }

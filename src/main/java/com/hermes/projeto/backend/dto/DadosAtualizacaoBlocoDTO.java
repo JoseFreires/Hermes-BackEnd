@@ -6,8 +6,6 @@ import jakarta.validation.constraints.Size;
 
 public record DadosAtualizacaoBlocoDTO(
 
-        @NotNull(message = "O ID do bloco é obrigatório")
-        Long idBloco,
 
         @NotBlank(message = "O nome da torre é obrigatório")
         @Size(max = 45, message = "O nome da torre não pode ter mais de 45 caracteres")

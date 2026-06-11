@@ -62,7 +62,8 @@ public class AdmService {
     public List<DadosConsultaPessoaDTO> listarTodosSindicos() {
         return usuarioRepository.findAll().stream()
                 .filter(usuario -> usuario.getPapel() != null &&
-                        usuario.getPapel().getNomePapel().equals("ROLE_SINDICO"))
+                        usuario.getPapel().getNomePapel().equals("ROLE_SINDICO") &&
+                        Boolean.TRUE.equals(usuario.getPessoa().getAtivo()))
                 .map(DadosConsultaPessoaDTO::new)
                 .toList();
     }

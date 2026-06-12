@@ -1,6 +1,6 @@
 package com.hermes.projeto.backend.dto;
 
-import com.hermes.projeto.backend.entities.condo.Bloco;
+import com.hermes.projeto.backend.entities.Bloco;
 
 public record DadosConsultaBlocoDTO(
 

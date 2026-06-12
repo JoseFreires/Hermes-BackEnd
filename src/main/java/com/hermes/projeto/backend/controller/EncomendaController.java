@@ -43,12 +43,12 @@ public class EncomendaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DadosConsultaEncomendaDTO>> listar() {
+    public ResponseEntity<List<DadosConsultaEncomendaDTO>> listarEncomendas() {
         return ResponseEntity.ok(portariaService.listarTodasEncomendas());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity detalhar(@PathVariable Long id) {
+    public ResponseEntity encontrarEncomendaPorId(@PathVariable Long id) {
         var detalhes = portariaService.buscarEncomendaPorId(id);
         return ResponseEntity.ok(detalhes);
     }

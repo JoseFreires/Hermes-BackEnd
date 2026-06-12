@@ -1,4 +1,4 @@
-package com.hermes.projeto.backend.entities.condo;
+package com.hermes.projeto.backend.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hermes.projeto.backend.entities.Morador;
 
 @Entity
 @Table(name = "moradia")

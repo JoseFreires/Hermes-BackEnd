@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hermes.projeto.backend.entities.Morador;
 import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.condo.Moradia;
+import com.hermes.projeto.backend.entities.Moradia;
 import com.hermes.projeto.backend.entities.security.Papel;
 import com.hermes.projeto.backend.entities.security.Usuario;
 

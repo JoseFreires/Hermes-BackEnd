@@ -1,4 +1,4 @@
-package com.hermes.projeto.backend.entities.condo;
+package com.hermes.projeto.backend.entities;
 
 import java.util.ArrayList;
 import java.util.List;

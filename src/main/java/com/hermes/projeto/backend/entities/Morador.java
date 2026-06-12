@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hermes.projeto.backend.dto.DadosRegistrarMoradorDTO;
-import com.hermes.projeto.backend.entities.condo.Moradia;
 
 import jakarta.persistence.*;
 import lombok.Getter;

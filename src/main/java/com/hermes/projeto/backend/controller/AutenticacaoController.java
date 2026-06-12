@@ -37,7 +37,7 @@ public class AutenticacaoController {
 
         Usuario usuario = (Usuario) authentication.getPrincipal();
 
-        //Trandformando o token em String para utitizar no httpOnly
+        //Transformando o token em String para utilizar no httpOnly
         String tokenJwt = tokenService.gerarToken((Usuario) authentication.getPrincipal());
 
         ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", tokenJwt)

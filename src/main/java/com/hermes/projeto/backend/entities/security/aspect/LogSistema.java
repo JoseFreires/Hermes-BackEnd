@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.hermes.projeto.backend.entities.security.Usuario;
 
+import com.hermes.projeto.backend.entities.svc.ContaAdm;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,12 +14,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "log_sistema")
 @Getter
 @Setter
+@NoArgsConstructor
 public class LogSistema {
 
     @Id
@@ -30,11 +33,15 @@ public class LogSistema {
     @JoinColumn(name = "Usuario_idUsuario", nullable = true)
     private Usuario usuario;
 
+    @ManyToOne
+    @JoinColumn(name = "conta_adm_idConta", nullable = true)
+    private ContaAdm contaAdm;
+
     @Column(name = "acao_realizada")
-    private String acao;
+    private String acaoRealizada;
 
     @Column(name = "tabela_alterada")
-    private String endpoint;
+    private String tabelaAlterada;
 
     @Column(name = "data_hora")
     private LocalDateTime dataHora;

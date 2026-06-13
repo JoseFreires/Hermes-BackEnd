@@ -15,8 +15,7 @@ public record DadosConsultaMoradorDTO(
         LocalDate dataChegada,
         LocalDate nascimento,
         String foto,
-        String telefone,
-        List<DadosConsultaPessoaAutorizadaDTO>pessoasAutorizadas
+        String telefone
 ) {
     // Construtor
     public DadosConsultaMoradorDTO(Usuario usuario) {
@@ -29,10 +28,7 @@ public record DadosConsultaMoradorDTO(
                 usuario.getPessoa().getMorador().getDataChegada(),
                 usuario.getPessoa().getDataNascimento(),
                 usuario.getPessoa().getMorador().getUrlFoto(),
-                usuario.getPessoa().getTelefone(),
-                usuario.getPessoa().getMorador().getPessoasAutorizadas().stream()
-                        .map(DadosConsultaPessoaAutorizadaDTO::new)
-                        .toList()
+                usuario.getPessoa().getTelefone()
 
         );
     }

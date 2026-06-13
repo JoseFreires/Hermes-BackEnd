@@ -43,6 +43,7 @@ public class Morador {
     @JoinColumn(name = "Pessoa_idPessoa", nullable = false, unique = true)
     private Pessoa pessoa;
 
+
     @OneToMany(mappedBy = "morador", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PessoaAutorizada> pessoasAutorizadas = new ArrayList<>();
 

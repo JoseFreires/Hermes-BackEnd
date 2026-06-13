@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.entities.security.aspect;
 
+import com.hermes.projeto.backend.entities.svc.ContaAdm;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -18,45 +19,45 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class LogAspect {
 
-    @Autowired
-    private LogSistemaService logService;
+    private final LogSistemaService logService;
+    private final HttpServletRequest request;
 
-    @Autowired
-    private HttpServletRequest request;
+    public LogAspect(LogSistemaService logService, HttpServletRequest request) {
+        this.logService = logService;
+        this.request = request;
+    }
 
     @Before("execution(* com.hermes..controller..*(..))")
     public void registrarLog(JoinPoint joinPoint) {
 
         String path = request.getRequestURI();
 
-        // Ignora login
         if (path.equals("/login")) {
             return;
         }
 
         var auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Usuario usuario = null;
+        if (auth == null || !auth.isAuthenticated()) {
+            return;
+        }
 
-        if (auth != null
-            && auth.isAuthenticated()
-            && auth.getPrincipal() instanceof Usuario) {
+        var principal = auth.getPrincipal();
 
-            usuario = (Usuario) auth.getPrincipal();
-            
+        // Morador não gera log
+        if (principal instanceof Usuario usuario) {
             boolean ehMorador = usuario.getAuthorities()
                     .stream()
                     .anyMatch(a -> a.getAuthority().equals("ROLE_MORADOR"));
 
-                if (ehMorador) {
-                    return;
-                }
+            if (ehMorador) {
+                return;
+            }
 
+            logService.salvarPorUsuario(usuario, request.getMethod(), path);
+
+        } else if (principal instanceof ContaAdm contaAdm) {
+            logService.salvarPorContaAdm(contaAdm, request.getMethod(), path);
         }
-
-        String metodo = request.getMethod();
-        String endpoint = path;
-
-        logService.salvar(usuario, metodo, endpoint);
     }
 }

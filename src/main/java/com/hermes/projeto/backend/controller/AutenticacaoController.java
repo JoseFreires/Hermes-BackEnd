@@ -1,21 +1,20 @@
 package com.hermes.projeto.backend.controller;
 
 import com.hermes.projeto.backend.dto.DadosConsultaLoginDTO;
+import com.hermes.projeto.backend.dto.DadosLoginDTO;
+import com.hermes.projeto.backend.entities.security.Usuario;
 import com.hermes.projeto.backend.entities.svc.ContaAdm;
+import com.hermes.projeto.backend.entities.security.service.TokenService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.hermes.projeto.backend.dto.DadosLoginDTO;
-import com.hermes.projeto.backend.entities.security.Usuario;
-import com.hermes.projeto.backend.entities.security.service.TokenService;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
@@ -24,27 +23,18 @@ import jakarta.validation.Valid;
 public class AutenticacaoController {
 
     @Autowired
-    AuthenticationManager manager;
+    private AuthenticationManager manager;
 
     @Autowired
-    TokenService tokenService;
+    private TokenService tokenService;
 
-    @PostMapping
-    public ResponseEntity<DadosConsultaLoginDTO> logar(@RequestBody @Valid DadosLoginDTO dados) {
 
-        var token = new UsernamePasswordAuthenticationToken(dados.username(), dados.senha());
-        var authentication = manager.authenticate(token);
-        var principal = authentication.getPrincipal();
-
-        String tokenJwt;
-        DadosConsultaLoginDTO dadosFrontEnd;
+    //Método para não repetir a lógica de contaAdm e Usuario
+    private DadosConsultaLoginDTO extrairDadosUsuario(Object principal) {
 
         if (principal instanceof Usuario usuario) {
-            tokenJwt = tokenService.gerarTokenUsuario(usuario);
-
             String role = usuario.getAuthorities().iterator().next().getAuthority();
-
-            dadosFrontEnd = new DadosConsultaLoginDTO(
+            return new DadosConsultaLoginDTO(
                     usuario.getId(),
                     usuario.getUsername(),
                     usuario.getPessoa().getNomeCompleto(),
@@ -52,11 +42,8 @@ public class AutenticacaoController {
             );
 
         } else if (principal instanceof ContaAdm contaAdm) {
-            tokenJwt = tokenService.gerarTokenContaAdm(contaAdm);
-
             String role = contaAdm.getAuthorities().iterator().next().getAuthority();
-
-            dadosFrontEnd = new DadosConsultaLoginDTO(
+            return new DadosConsultaLoginDTO(
                     contaAdm.getIdContaAdm(),
                     contaAdm.getUsername(),
                     contaAdm.getNomeConta(),
@@ -64,8 +51,31 @@ public class AutenticacaoController {
             );
 
         } else {
+            throw new ClassCastException("Tipo de usuário não reconhecido na extração: " + principal.getClass());
+        }
+    }
+
+
+    //POST Login
+    @PostMapping
+    public ResponseEntity<DadosConsultaLoginDTO> logar(@RequestBody @Valid DadosLoginDTO dados) {
+
+        var token = new UsernamePasswordAuthenticationToken(dados.username(), dados.senha());
+        var authentication = manager.authenticate(token);
+        var principal = authentication.getPrincipal();
+
+
+        String tokenJwt;
+        if (principal instanceof Usuario usuario) {
+            tokenJwt = tokenService.gerarTokenUsuario(usuario);
+        } else if (principal instanceof ContaAdm contaAdm) {
+            tokenJwt = tokenService.gerarTokenContaAdm(contaAdm);
+        } else {
             throw new ClassCastException("Tipo de usuário não reconhecido: " + principal.getClass());
         }
+
+
+        DadosConsultaLoginDTO dadosFrontEnd = extrairDadosUsuario(principal);
 
         ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", tokenJwt)
                 .httpOnly(true)
@@ -80,4 +90,19 @@ public class AutenticacaoController {
                 .body(dadosFrontEnd);
     }
 
+
+    //Como solicitado pelos "bons de frente" GET login
+
+    @GetMapping("/eu")
+    public ResponseEntity<DadosConsultaLoginDTO> consultaUsuarioLogado(Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        var principal = authentication.getPrincipal();
+        DadosConsultaLoginDTO dadosFrontEnd = extrairDadosUsuario(principal);
+
+        return ResponseEntity.ok(dadosFrontEnd);
+    }
 }

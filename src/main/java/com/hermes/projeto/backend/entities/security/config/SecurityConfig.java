@@ -30,6 +30,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                 // Autenticação - permitir acesso público
                 request.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                request.requestMatchers(HttpMethod.POST, "/login/eu").permitAll();
 
                 // ENCOMENDAS
                 request.requestMatchers(HttpMethod.POST, "/encomendas").hasAnyRole("PORTEIRO", "ADMIN");

@@ -34,7 +34,7 @@ public class Encomenda {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idEncomenda")
-    private Long idEncomenda; // Simplificar para 'id' no Java é uma boa prática, mas mantive o mapeamento
+    private Long idEncomenda;
 
     @Column(name = "nome_pacote")
     private String nomePacote;

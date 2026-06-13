@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+import com.hermes.projeto.backend.entities.svc.ContaAdm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class TokenService{
     @Value("${api.security.tokenJWT.segredo}")
     private  String segredo;
 
-    public String gerarToken(Usuario usuario){
+    public String gerarTokenUsuario(Usuario usuario){
         try {
             
             Algorithm  algorithm = Algorithm.HMAC256(segredo.trim());
@@ -32,10 +33,13 @@ public class TokenService{
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+            String nome = usuario.getPessoa().getNomeCompleto();
+
             return JWT.create()
                 .withIssuer("Hermes")
                 .withSubject(usuario.getUsername()) 
-                .withClaim("roles", roles)              // Adiciona a lista de Strings ["ROLE_PORTEIRO", "ROLE_MORADOR"]
+                .withClaim("roles", roles)
+                    .withClaim("nome", nome)
                 .withExpiresAt(Expiracao())
                 .sign(algorithm);
 
@@ -45,6 +49,35 @@ public class TokenService{
         }
 
        
+
+    }
+
+    public String gerarTokenContaAdm(ContaAdm contaAdm){
+        try {
+
+            Algorithm  algorithm = Algorithm.HMAC256(segredo.trim());
+
+            List<String> roles = contaAdm.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+
+            String nome = contaAdm.getNomeConta();
+
+            return JWT.create()
+                    .withIssuer("Hermes")
+                    .withSubject(contaAdm.getUsername())
+                    .withClaim("roles", roles)
+                    .withClaim("nome", nome)
+                    .withExpiresAt(Expiracao())
+                    .sign(algorithm);
+
+
+        }catch (JWTCreationException exception){
+            throw new RuntimeException("Erro ao gerar token", exception);
+        }
+
+
 
     }
 

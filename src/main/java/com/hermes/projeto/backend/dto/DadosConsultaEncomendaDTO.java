@@ -2,6 +2,8 @@ package com.hermes.projeto.backend.dto;
 
 import com.hermes.projeto.backend.entities.Encomenda;
 
+import java.time.LocalDateTime;
+
 public record DadosConsultaEncomendaDTO(
         Long id,
         String nomePacote,
@@ -11,7 +13,9 @@ public record DadosConsultaEncomendaDTO(
         String nomePorteiro, // Antes: turnoPorteiro (não existe mais turno na tabela usuario)
         String numeroApartamento,
         String emailDestinatario,
-        String tokenEncomenda
+        String tokenEncomenda,
+        LocalDateTime dataHoraRecebido,
+        LocalDateTime dataHoraRetirado
 ){
     // Construtor para converter a Entidade Encomenda direto para o DTO
     public DadosConsultaEncomendaDTO(Encomenda encomenda) {
@@ -24,7 +28,10 @@ public record DadosConsultaEncomendaDTO(
             encomenda.getPorteiro().getPessoa().getNomeCompleto(),// Pega o nome do Usuario (Porteiro)
             encomenda.getMoradorDestinatario().getMorador().getMoradia().getNumero(),
             encomenda.getMoradorDestinatario().getEmail(),
-            encomenda.getToken()
+            encomenda.getToken(),
+            encomenda.getDataHoraRecebido(),
+            encomenda.getDataHoraRetirado()
+
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.hermes.projeto.backend.controller;
 
 import com.hermes.projeto.backend.dto.DadosConsultaLoginDTO;
+import com.hermes.projeto.backend.entities.svc.ContaAdm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -29,42 +30,54 @@ public class AutenticacaoController {
     TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity logar(@RequestBody @Valid DadosLoginDTO dados){
+    public ResponseEntity<DadosConsultaLoginDTO> logar(@RequestBody @Valid DadosLoginDTO dados) {
 
         var token = new UsernamePasswordAuthenticationToken(dados.username(), dados.senha());
-
         var authentication = manager.authenticate(token);
+        var principal = authentication.getPrincipal();
 
-        Usuario usuario = (Usuario) authentication.getPrincipal();
+        String tokenJwt;
+        DadosConsultaLoginDTO dadosFrontEnd;
 
-        //Transformando o token em String para utilizar no httpOnly
-        String tokenJwt = tokenService.gerarToken((Usuario) authentication.getPrincipal());
+        if (principal instanceof Usuario usuario) {
+            tokenJwt = tokenService.gerarTokenUsuario(usuario);
+
+            String role = usuario.getAuthorities().iterator().next().getAuthority();
+
+            dadosFrontEnd = new DadosConsultaLoginDTO(
+                    usuario.getId(),
+                    usuario.getUsername(),
+                    usuario.getPessoa().getNomeCompleto(),
+                    role
+            );
+
+        } else if (principal instanceof ContaAdm contaAdm) {
+            tokenJwt = tokenService.gerarTokenContaAdm(contaAdm);
+
+            String role = contaAdm.getAuthorities().iterator().next().getAuthority();
+
+            dadosFrontEnd = new DadosConsultaLoginDTO(
+                    contaAdm.getIdContaAdm(),
+                    contaAdm.getUsername(),
+                    contaAdm.getNomeConta(),
+                    role
+            );
+
+        } else {
+            throw new ClassCastException("Tipo de usuário não reconhecido: " + principal.getClass());
+        }
 
         ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", tokenJwt)
-                .httpOnly(true)       // Proibi o javascript de ler o token
-                .secure(false)        // OBS: Aqui coloquei false para testar no localHost, depois mudar para true.
+                .httpOnly(true)
+                .secure(false) // OBS: mudar para true em produção
                 .path("/")
                 .maxAge(2 * 60 * 60)
                 .sameSite("Strict")
                 .build();
 
-        String roleDoUsuario = usuario.getAuthorities().iterator().next().getAuthority();
-
-
-        DadosConsultaLoginDTO dadosFrontEnd = new DadosConsultaLoginDTO(
-                usuario.getId(),
-                usuario.getUsername(),
-                roleDoUsuario
-        );
-
-
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
                 .body(dadosFrontEnd);
-
-        
     }
 
-
-    
 }

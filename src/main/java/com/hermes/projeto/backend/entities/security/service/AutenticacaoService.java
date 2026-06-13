@@ -1,5 +1,6 @@
 package com.hermes.projeto.backend.entities.security.service;
 
+import com.hermes.projeto.backend.repository.ContaAdmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,9 +16,19 @@ public class AutenticacaoService implements UserDetailsService{
     @Autowired
     UsuarioRepository repository;
 
+    @Autowired
+    ContaAdmRepository repositoryContaAdm;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-       
-        return repository.findByUsername(username);
+        if(repository.findByUsername(username) != null){
+            return repository.findByUsername(username);
+        } else {
+            return repositoryContaAdm.findByUsername(username);
+        }
+
+
     }
+
+
 }

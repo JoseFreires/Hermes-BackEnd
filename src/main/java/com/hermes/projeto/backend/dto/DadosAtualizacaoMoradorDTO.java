@@ -6,15 +6,13 @@ import jakarta.validation.constraints.NotNull;
 
 public record DadosAtualizacaoMoradorDTO(
 
-
-        @NotNull(message = "A data de chegada é obrigatória")
         LocalDate dataChegada,
 
         LocalDate dataSaida,
 
         String fotoPerfil,
 
-        @NotNull(message = "O ID da moradia é obrigatório")
+
         Long moradiaIdMoradia,
 
         String nomeCompleto,

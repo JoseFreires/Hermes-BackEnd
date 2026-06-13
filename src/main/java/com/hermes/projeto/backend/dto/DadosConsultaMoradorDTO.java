@@ -31,6 +31,7 @@ public record DadosConsultaMoradorDTO(
                 usuario.getPessoa().getTelefone()
 
         );
+
     }
 
 }

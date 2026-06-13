@@ -28,6 +28,8 @@ public class SindicoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private MoradorRepository moradorRepository;
 
     @Autowired
     private PapelRepository papelRepository;
@@ -45,7 +47,7 @@ public class SindicoService {
     private MoradiaRepository moradiaRepository;
 
 
-    //CRUD PORTEIRO
+    //CRUD MORADOR
 
     //POST Morador
     @Transactional
@@ -100,19 +102,24 @@ public class SindicoService {
 
     //GET Morador por ID
     @Transactional(readOnly = true)
-    public DadosConsultaMoradorDTO buscarMoradorPorId(Long id) {
-        Usuario morador = usuarioRepository.findById(id)
+    public DadosConsultaMoradorDTO buscarMoradorPorId(Long idMorador) {
+        Usuario usuario = moradorRepository.findUsuarioByMoradorId(idMorador)
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
-        return new DadosConsultaMoradorDTO(morador);
+
+        if (usuario.getPessoa().getMorador() == null) {
+            throw new EntityNotFoundException("O usuário informado não é um morador.");
+        }
+
+        return new DadosConsultaMoradorDTO(usuario);
     }
 
     //PUT Morador
     @Transactional
-    public DadosConsultaMoradorDTO editarMorador(Long idUsuario, DadosAtualizacaoMoradorDTO dados){
+    public DadosConsultaMoradorDTO editarMorador(Long idMorador, DadosAtualizacaoMoradorDTO dados){
 
 
-        var usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado!"));
+        Usuario usuario = moradorRepository.findUsuarioByMoradorId(idMorador)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado!"));
 
 
         var pessoa = usuario.getPessoa();
@@ -146,12 +153,12 @@ public class SindicoService {
 
     //"DELETE" Morador
     @Transactional
-    public void desativarMorador(Long id){
+    public void desativarMorador(Long idMorador){
 
-        var UsuarioMorador = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado."));
+        Usuario usuario = moradorRepository.findUsuarioByMoradorId(idMorador)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado!"));
 
-        var pessoaMorador = UsuarioMorador.getPessoa();
+        var pessoaMorador = usuario.getPessoa();
         pessoaMorador.setAtivo(false);
         pessoaMorador.getMorador().setDataSaida(LocalDateTime.now());
 
@@ -207,11 +214,15 @@ public class SindicoService {
     }
 
     //GET Porteiro por Id
-    @Transactional(readOnly = true)
     public DadosConsultaPorteiroDTO buscarPorteiroPorId(Long id) {
-        var porteiro = usuarioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrada"));
-        return new DadosConsultaPorteiroDTO(porteiro);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
+
+        if (usuario.getPessoa() == null || usuario.getPessoa().getPorteiro() == null) {
+            throw new EntityNotFoundException("O usuário informado não é um porteiro.");
+        }
+
+        return new DadosConsultaPorteiroDTO(usuario);
     }
 
 

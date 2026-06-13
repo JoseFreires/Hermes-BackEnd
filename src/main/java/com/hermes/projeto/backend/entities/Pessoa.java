@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@NoArgsConstructor // Adicione isso
-@AllArgsConstructor // Adicione isso
+@NoArgsConstructor
 @Table(name = "pessoa")
-@Entity (name = "Pessoa")
-@EqualsAndHashCode (of = "id")
+@Entity(name = "Pessoa")
+@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
 public class Pessoa {
@@ -28,16 +27,14 @@ public class Pessoa {
     @Column(name = "nome_completo")
     private String nomeCompleto;
 
-
     @Column(unique = true)
     private String cpf;
 
     private Boolean ativo;
 
     @Column(name = "data_nascimento")
-    @Temporal(TemporalType.DATE)
     private LocalDate dataNascimento;
-    
+
     private String telefone;
     private String email;
 
@@ -47,8 +44,6 @@ public class Pessoa {
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Porteiro porteiro;
 
-
-
     public Pessoa(DadosRegistrarPessoaDTO dados) {
         this.nomeCompleto = dados.nomeCompleto();
         this.cpf = dados.cpf();
@@ -57,6 +52,4 @@ public class Pessoa {
         this.dataNascimento = dados.dataNascimento();
         this.ativo = true;
     }
-
-
 }

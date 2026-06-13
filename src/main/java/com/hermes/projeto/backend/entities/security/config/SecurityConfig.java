@@ -42,7 +42,7 @@ public class SecurityConfig {
                  request.requestMatchers(HttpMethod.POST, "/moradores").hasAnyRole("SINDICO", "ADMIN");
                 request.requestMatchers(HttpMethod.GET, "/moradores").hasAnyRole("SINDICO", "ADMIN");
                 request.requestMatchers(HttpMethod.GET, "/moradores/**").hasAnyRole("MORADOR", "SINDICO", "ADMIN");
-                request.requestMatchers(HttpMethod.PUT, "/moradores/**").hasAnyRole("MORADOR");
+                request.requestMatchers(HttpMethod.PUT, "/moradores/**").hasAnyRole("MORADOR","SINDICO", "ADMIN");
                 request.requestMatchers(HttpMethod.DELETE, "/moradores/**").hasAnyRole("ADMIN", "SINDICO");
 
                 // PESSOAS AUTORIZADAS

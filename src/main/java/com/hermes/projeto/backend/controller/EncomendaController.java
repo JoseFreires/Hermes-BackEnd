@@ -1,16 +1,15 @@
 package com.hermes.projeto.backend.controller;
 
+import java.net.URI;
 import java.util.List;
 
+import com.hermes.projeto.backend.dto.DadosAtualizacaoEncomendaDTO;
+import com.hermes.projeto.backend.dto.DadosAtualizarStatusEncomendaDTO;
+import com.hermes.projeto.backend.enums.StatusEncomenda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
@@ -27,24 +26,11 @@ public class EncomendaController {
     @Autowired
     private PortariaService portariaService;
 
-    @PostMapping
-    public ResponseEntity registrar(@Valid @RequestBody DadosRegistrarEncomendaDTO dados, 
-                                    UriComponentsBuilder uriBuilder,
-                                    @AuthenticationPrincipal Usuario logado) {
-        
-        // Agora 'encomenda' já é um DadosListagemEncomendaDTO
-        var encomendaDto = portariaService.registrarEncomenda(dados, logado);
-        
-        // Em Records, acessamos o id apenas como .id() e não .getIdEncomenda()
-        var uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomendaDto.id()).toUri();
-        
-        // Retornamos o DTO que o Service já preparou com carinho (e com a transação aberta)
-        return ResponseEntity.created(uri).body(encomendaDto);
-    }
-
     @GetMapping
-    public ResponseEntity<List<DadosConsultaEncomendaDTO>> listarEncomendas() {
-        return ResponseEntity.ok(portariaService.listarTodasEncomendas());
+    public ResponseEntity<List<DadosConsultaEncomendaDTO>> listarEncomendas(
+            @RequestParam(required = false) StatusEncomenda status) {
+
+        return ResponseEntity.ok(portariaService.listarEncomendas(status));
     }
 
     @GetMapping("/{id}")
@@ -52,4 +38,41 @@ public class EncomendaController {
         var detalhes = portariaService.buscarEncomendaPorId(id);
         return ResponseEntity.ok(detalhes);
     }
+
+    @PostMapping
+    public ResponseEntity<DadosConsultaEncomendaDTO> registrarEncomenda(
+            @Valid @RequestBody DadosRegistrarEncomendaDTO dados,
+            UriComponentsBuilder uriBuilder,
+            @AuthenticationPrincipal Usuario logado) {
+
+        DadosConsultaEncomendaDTO encomendaDto = portariaService.registrarEncomenda(dados, logado);
+        URI uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomendaDto.id()).toUri();
+
+        return ResponseEntity.created(uri).body(encomendaDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> editarEncomenda(
+            @PathVariable Long id,
+            @Valid @RequestBody DadosAtualizacaoEncomendaDTO dados) {
+
+        portariaService.editarEncomenda(id, dados);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}/entrega")
+    public ResponseEntity<Void> registrarEntrega(
+            @PathVariable Long id,
+            @Valid @RequestBody DadosAtualizarStatusEncomendaDTO dados) {
+
+        portariaService.registrarEntregaEncomenda(id, dados);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarEncomendaPorId(@PathVariable Long id) {
+        portariaService.deletarEncomendaPorId(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

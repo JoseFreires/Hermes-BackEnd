@@ -7,9 +7,6 @@ import jakarta.validation.constraints.NotNull;
 
 
 public record DadosAtualizarStatusEncomendaDTO(
-    
-    @NotNull(message = "O novo status deve ser informado")
-    StatusEncomenda status,
 
     @NotNull(message = "Quem retirou deve ser informado")
     TipoRetirada tipoRetirada

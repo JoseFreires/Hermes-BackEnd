@@ -42,12 +42,9 @@ public class PortariaService {
 
     @Transactional
     public DadosConsultaEncomendaDTO registrarEncomenda(DadosRegistrarEncomendaDTO dados, Usuario logado) {
-        // 1. Busca destinatário (Morador)
         Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
 
-        // 2. Validação de papel
-        // Carrega o usuário (porteiro) gerenciado dentro da transação para evitar LazyInitializationException
         var porteiro = usuarioRepository.findById(logado.getId())
             .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
 
@@ -56,25 +53,25 @@ public class PortariaService {
             throw new RuntimeException("Apenas usuários com papel de porteiro podem registrar encomendas");
         }
 
-        //Gera o token aleatório
         String tokenEncomenda = gerarTokenEncomenda();
 
-        //3. Cria e Salva
         var encomenda = new Encomenda(dados, porteiro, morador, tokenEncomenda);
         repository.save(encomenda);
 
-        // O SEGREDO: Converter para DTO AQUI dentro.
-        // Como o método é @Transactional, o Hibernate consegue buscar o NomeCompleto agora.
         return new DadosConsultaEncomendaDTO(encomenda);
     }
 
     @Transactional(readOnly = true)
-    public List<DadosConsultaEncomendaDTO> listarTodasEncomendas() {
-        // Usando o stream aqui dentro do Transactional também resolve para a lista
-        return repository.findAll().stream()
+    public List<DadosConsultaEncomendaDTO> listarEncomendas(StatusEncomenda status) {
+        List<Encomenda> encomendas = (status != null)
+                ? repository.findByStatus(status)
+                : repository.findAll();
+
+        return encomendas.stream()
                 .map(DadosConsultaEncomendaDTO::new)
                 .toList();
     }
+
 
     @Transactional(readOnly = true)
     public DadosConsultaEncomendaDTO buscarEncomendaPorId(Long id) {
@@ -90,13 +87,11 @@ public class PortariaService {
         var encomenda = repository.findById(idEncomenda)
                 .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
 
-        // Evita duplo clique ou entrega acidental de algo já entregue
-        if (encomenda.getStatusEncomenda() == StatusEncomenda.RETIRADA) {
+        if (encomenda.getStatusEncomenda() == StatusEncomenda.ENTREGUE) {
             throw new RuntimeException("Esta encomenda já consta como Retirada!");
         }
 
-        // Executa a transição de ENUM
-        encomenda.setStatusEncomenda(StatusEncomenda.RETIRADA);
+        encomenda.setStatusEncomenda(StatusEncomenda.ENTREGUE);
         encomenda.setDataHoraRetirado(LocalDateTime.now());
         encomenda.setTipoRetirada(dados.tipoRetirada());
 
@@ -108,6 +103,7 @@ public class PortariaService {
 
         var encomenda = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
+
 
         if (dados.observacao() != null) {
             encomenda.setObservacao(dados.observacao());
@@ -125,6 +121,8 @@ public class PortariaService {
 
             encomenda.setMoradorDestinatario(novoDestinatario);
         }
+
+
 
         repository.save(encomenda);
     }

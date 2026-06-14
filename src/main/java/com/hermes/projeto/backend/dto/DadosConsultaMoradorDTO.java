@@ -7,7 +7,8 @@ import java.util.List;
 import com.hermes.projeto.backend.entities.security.Usuario;
 
 public record DadosConsultaMoradorDTO(
-        Long   idUsuario,
+        Long  idUsuario,
+        Long idPessoa,
         String nome,
         String email,
         String numeroApartamento,
@@ -21,6 +22,7 @@ public record DadosConsultaMoradorDTO(
     public DadosConsultaMoradorDTO(Usuario usuario) {
         this(
                 usuario.getPessoa().getMorador().getId(),
+                usuario.getPessoa().getId(),
                 usuario.getPessoa().getNomeCompleto(),
                 usuario.getPessoa().getEmail(),
                 usuario.getPessoa().getMorador().getMoradia().getNumero(),

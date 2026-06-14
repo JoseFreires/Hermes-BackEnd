@@ -74,6 +74,7 @@ public class Encomenda {
     public Encomenda(DadosRegistrarEncomendaDTO dados, Usuario porteiro, Pessoa moradorDestinatario, String token) {
         this.nomePacote = dados.nomePacote();
         this.dataHoraRecebido = LocalDateTime.now();
+        this.observacao = dados.observacao();
         this.statusEncomenda = StatusEncomenda.RECEBIDA;
         this.porteiro = porteiro;
         this.moradorDestinatario = moradorDestinatario;

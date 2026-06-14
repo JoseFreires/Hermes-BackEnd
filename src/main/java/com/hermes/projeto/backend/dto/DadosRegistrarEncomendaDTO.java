@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.hermes.projeto.backend.entities.Pessoa;
 import com.hermes.projeto.backend.enums.StatusEncomenda;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ public record DadosRegistrarEncomendaDTO(
     @NotBlank @Email
     String emailDestinatario,
 
+    @Column (name = "id_pessoa_destinatario")
     @NotNull(message = "O ID do destinatário é obrigatório")
     Long idDestinatario,
 

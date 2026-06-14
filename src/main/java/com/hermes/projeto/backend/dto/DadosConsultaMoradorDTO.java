@@ -2,12 +2,11 @@ package com.hermes.projeto.backend.dto;
 
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.hermes.projeto.backend.entities.security.Usuario;
 
 public record DadosConsultaMoradorDTO(
-        Long  idUsuario,
+        Long idMorador,
         Long idPessoa,
         String nome,
         String email,

@@ -14,9 +14,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     @Query("SELECT u FROM Usuario u JOIN FETCH u.pessoa JOIN FETCH u.papel WHERE u.username = :username")
     UserDetails findByUsername(@Param("username") String username);
 
-    @Query("SELECT u FROM Usuario u WHERE u.pessoa.morador IS NOT NULL AND u.pessoa.ativo = true")
-    List<Usuario> findAllMoradores();
 
-    @Query("SELECT u FROM Usuario u WHERE u.pessoa.porteiro IS NOT NULL AND u.pessoa.ativo = true")
-    List<Usuario> findAllPorteiros();
 }

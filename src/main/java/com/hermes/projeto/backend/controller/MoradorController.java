@@ -26,8 +26,7 @@ public class MoradorController {
     // Busca um morador pelo seu id
     @GetMapping("/{id}")
     public ResponseEntity<DadosConsultaMoradorDTO> encontrarMoradorPorId(@PathVariable Long id) {
-        var detalhes = sindicoService.buscarMoradorPorId(id);
-        return ResponseEntity.ok(detalhes);
+        return ResponseEntity.ok(sindicoService.buscarMoradorPorId(id));
     }
 
 
@@ -37,7 +36,7 @@ public class MoradorController {
 
         var moradorDto = sindicoService.registrarMorador(dados);
 
-        var uri = uriBuilder.path("/moradores/{id}").buildAndExpand(moradorDto.idUsuario()).toUri();
+        var uri = uriBuilder.path("/moradores/{id}").buildAndExpand(moradorDto.idMorador()).toUri();
 
         return ResponseEntity.created(uri).body(moradorDto);
     }

@@ -32,6 +32,9 @@ public class SindicoService {
     private MoradorRepository moradorRepository;
 
     @Autowired
+    private PorteiroRepository porteiroRepository;
+
+    @Autowired
     private PapelRepository papelRepository;
 
     @Autowired
@@ -228,12 +231,11 @@ public class SindicoService {
 
     //PUT Porteiro
     @Transactional
-    public DadosConsultaPorteiroDTO editarPorteiro(Long idUsuario, DadosAtualizacaoPorteiroDTO dados){
+    public DadosConsultaPorteiroDTO editarPorteiro(Long idPorteiro, DadosAtualizacaoPorteiroDTO dados){
 
 
-        var usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado!"));
-
+        Usuario usuario = porteiroRepository.findUsuarioByPorteiroId(idPorteiro)
+                .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado!"));
 
         var pessoa = usuario.getPessoa();
         var porteiro = pessoa.getPorteiro();
@@ -267,7 +269,7 @@ public class SindicoService {
     @Transactional
     public void desativarPorteiro(Long id){
 
-        var UsuarioPorteiro = usuarioRepository.findById(id)
+        Usuario UsuarioPorteiro = porteiroRepository.findUsuarioByPorteiroId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado."));
 
         var pessoaPorteiro = UsuarioPorteiro.getPessoa();

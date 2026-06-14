@@ -7,6 +7,8 @@ public record DadosConsultaPorteiroDTO(
 
         Long idPorteiro,
 
+        Long idUsuario,
+
         TurnoPorteiro turno,
 
         String empresaResponsavel,
@@ -24,6 +26,7 @@ public record DadosConsultaPorteiroDTO(
 ) {// Construtor
     public DadosConsultaPorteiroDTO(Usuario usuario) {
         this(
+                usuario.getPessoa().getPorteiro().getId(),
                 usuario.getId(),
                 usuario.getPessoa().getPorteiro().getTurno(),
                 usuario.getPessoa().getPorteiro().getEmpresaResponsavel(),

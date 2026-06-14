@@ -28,7 +28,7 @@ public class Bloco {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idTorre")
+    @Column(name = "idBloco")
     private Long id;
 
     @Column(nullable = false, length = 45)

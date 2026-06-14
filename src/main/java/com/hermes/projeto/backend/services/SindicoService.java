@@ -3,19 +3,23 @@ package com.hermes.projeto.backend.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.Porteiro;
+import com.hermes.projeto.backend.domain.Porteiro;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoMoradorDTO;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPorteiroDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarMoradorDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarPorteiroDTO;
+import com.hermes.projeto.backend.dto.response.*;
 import com.hermes.projeto.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.entities.Morador;
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.Moradia;
-import com.hermes.projeto.backend.entities.security.Papel;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.domain.Morador;
+import com.hermes.projeto.backend.domain.Pessoa;
+import com.hermes.projeto.backend.domain.Moradia;
+import com.hermes.projeto.backend.security.Papel;
+import com.hermes.projeto.backend.security.Usuario;
 
 import jakarta.persistence.EntityNotFoundException;
 

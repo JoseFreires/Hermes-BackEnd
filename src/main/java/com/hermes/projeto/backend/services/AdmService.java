@@ -1,10 +1,12 @@
 package com.hermes.projeto.backend.services;
 
 import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.Porteiro;
-import com.hermes.projeto.backend.entities.security.Papel;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.domain.Pessoa;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPessoaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarPessoaDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaPessoaDTO;
+import com.hermes.projeto.backend.security.Papel;
+import com.hermes.projeto.backend.security.Usuario;
 import com.hermes.projeto.backend.repository.PapelRepository;
 import com.hermes.projeto.backend.repository.PessoaRepository;
 import com.hermes.projeto.backend.repository.UsuarioRepository;

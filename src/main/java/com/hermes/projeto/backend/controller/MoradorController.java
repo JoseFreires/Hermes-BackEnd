@@ -1,6 +1,8 @@
 package com.hermes.projeto.backend.controller;
 
-import com.hermes.projeto.backend.dto.*;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoMoradorDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarMoradorDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaMoradorDTO;
 import com.hermes.projeto.backend.services.SindicoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

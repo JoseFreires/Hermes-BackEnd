@@ -1,8 +1,9 @@
 package com.hermes.projeto.backend.services;
 
-import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.PessoaAutorizada;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.domain.PessoaAutorizada;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPessoaAutorizadaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarPessoaAutorizadaDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaPessoaAutorizadaDTO;
 import com.hermes.projeto.backend.repository.MoradorRepository;
 import com.hermes.projeto.backend.repository.PessoaAutorizadaRepository;
 import jakarta.persistence.EntityNotFoundException;

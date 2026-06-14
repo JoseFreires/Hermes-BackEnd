@@ -3,18 +3,18 @@ package com.hermes.projeto.backend.controller;
 import java.net.URI;
 import java.util.List;
 
-import com.hermes.projeto.backend.dto.DadosAtualizacaoEncomendaDTO;
-import com.hermes.projeto.backend.dto.DadosAtualizarStatusEncomendaDTO;
-import com.hermes.projeto.backend.enums.StatusEncomenda;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoEncomendaDTO;
+import com.hermes.projeto.backend.dto.request.DadosAtualizarStatusEncomendaDTO;
+import com.hermes.projeto.backend.domain.enums.StatusEncomenda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
-import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.dto.response.DadosConsultaEncomendaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarEncomendaDTO;
+import com.hermes.projeto.backend.security.Usuario;
 import com.hermes.projeto.backend.services.PortariaService;
 
 import jakarta.validation.Valid;

@@ -1,9 +1,7 @@
 package com.hermes.projeto.backend.repository;
 
-import com.hermes.projeto.backend.entities.Encomenda;
-import com.hermes.projeto.backend.enums.StatusEncomenda;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.hermes.projeto.backend.domain.Encomenda;
+import com.hermes.projeto.backend.domain.enums.StatusEncomenda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

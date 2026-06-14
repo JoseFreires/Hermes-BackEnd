@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.hermes.projeto.backend.entities.security.Usuario;
-
-import java.util.List;
+import com.hermes.projeto.backend.security.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 

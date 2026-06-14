@@ -4,18 +4,18 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hermes.projeto.backend.dto.DadosAtualizacaoEncomendaDTO;
-import com.hermes.projeto.backend.dto.DadosAtualizarStatusEncomendaDTO;
-import com.hermes.projeto.backend.enums.StatusEncomenda;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoEncomendaDTO;
+import com.hermes.projeto.backend.dto.request.DadosAtualizarStatusEncomendaDTO;
+import com.hermes.projeto.backend.domain.enums.StatusEncomenda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.dto.DadosConsultaEncomendaDTO;
-import com.hermes.projeto.backend.dto.DadosRegistrarEncomendaDTO;
-import com.hermes.projeto.backend.entities.Encomenda;
-import com.hermes.projeto.backend.entities.Pessoa;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.dto.response.DadosConsultaEncomendaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarEncomendaDTO;
+import com.hermes.projeto.backend.domain.Encomenda;
+import com.hermes.projeto.backend.domain.Pessoa;
+import com.hermes.projeto.backend.security.Usuario;
 import com.hermes.projeto.backend.repository.EncomendaRepository;
 import com.hermes.projeto.backend.repository.PessoaRepository;
 import com.hermes.projeto.backend.repository.UsuarioRepository;

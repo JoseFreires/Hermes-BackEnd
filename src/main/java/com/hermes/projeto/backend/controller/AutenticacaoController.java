@@ -1,10 +1,10 @@
 package com.hermes.projeto.backend.controller;
 
-import com.hermes.projeto.backend.dto.DadosConsultaLoginDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaLoginDTO;
 import com.hermes.projeto.backend.dto.DadosLoginDTO;
-import com.hermes.projeto.backend.entities.security.Usuario;
-import com.hermes.projeto.backend.entities.svc.ContaAdm;
-import com.hermes.projeto.backend.entities.security.service.TokenService;
+import com.hermes.projeto.backend.security.Usuario;
+import com.hermes.projeto.backend.domain.ContaAdm;
+import com.hermes.projeto.backend.services.TokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

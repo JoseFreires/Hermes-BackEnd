@@ -46,7 +46,7 @@ public class EncomendaController {
             @AuthenticationPrincipal Usuario logado) {
 
         DadosConsultaEncomendaDTO encomendaDto = portariaService.registrarEncomenda(dados, logado);
-        URI uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomendaDto.id()).toUri();
+        URI uri = uriBuilder.path("/encomendas/{id}").buildAndExpand(encomendaDto.idEncomenda()).toUri();
 
         return ResponseEntity.created(uri).body(encomendaDto);
     }

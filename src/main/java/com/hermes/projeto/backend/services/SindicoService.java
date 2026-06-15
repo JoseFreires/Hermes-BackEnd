@@ -286,12 +286,28 @@ public class SindicoService {
 
     //CONSULTA CONDOMINIAL
 
-    //GET Condominio
+    //GET lista Moradias
     @Transactional(readOnly = true)
-    public DadosConsultaCondominioDTO buscarCondominioPorId(Long id) {
-        var condominio = condominioRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("condominio não encontrado"));
-        return new DadosConsultaCondominioDTO(condominio);
+    public List<DadosConsultaMoradiaDTO> listarTodasMoradias() {
+        return moradiaRepository.findAll().stream()
+                .map(DadosConsultaMoradiaDTO::new)
+                .toList();
+    }
+
+    //GET Moradia por ID
+    @Transactional(readOnly = true)
+    public DadosConsultaMoradiaDTO buscarMoradiaPorId(Long id) {
+        var moradia = moradiaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Moradia não encontrada"));
+        return new DadosConsultaMoradiaDTO(moradia);
+    }
+
+    //GET Moradores por ID moradia
+    @Transactional(readOnly = true)
+    public DadosConsultaMoradiaMoradoresDTO listarMoradoresPorMoradiaId(Long id) {
+        var moradia = moradiaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Moradia não encontrada"));
+        return new DadosConsultaMoradiaMoradoresDTO(moradia);
     }
 
 
@@ -311,18 +327,11 @@ public class SindicoService {
         return new DadosConsultaBlocoDTO(bloco);
     }
 
-    //GET lista Moradias
+    //GET Moradias por ID bloco
     @Transactional(readOnly = true)
-    public List<DadosConsultaMoradiaDTO> listarTodasMoradias() {
-        return moradiaRepository.findAll().stream()
-                .map(DadosConsultaMoradiaDTO::new)
-                .toList();
-    }
-    //GET Moradia por ID
-    @Transactional(readOnly = true)
-    public DadosConsultaMoradiaDTO buscarMoradiaPorId(Long id) {
-        var moradia = moradiaRepository.findById(id)
+    public DadosConsultaBlocoMoradiasDTO listarMoradiasPorBlocoId(Long id) {
+        var bloco = blocoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Moradia não encontrada"));
-        return new DadosConsultaMoradiaDTO(moradia);
+        return new DadosConsultaBlocoMoradiasDTO(bloco);
     }
 }

@@ -3,6 +3,7 @@ package com.hermes.projeto.backend.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,7 @@ public class Condominio {
     @Column(nullable = false, length = 100)
     private String nome_condominio;
 
-    @OneToMany(mappedBy = "condominio", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "condominio")
+    @JsonManagedReference
     private List<Bloco> blocos = new ArrayList<>();
 }

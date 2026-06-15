@@ -45,6 +45,17 @@
 | PUT    | `/api/porteiros/{id}` | Atualiza porteiro                | ✅   |
 | DELETE | `/api/porteiros/{id}` | Remove o porteiro                | ✅   |
 
+### Requisições de Consulta Condominial
+
+| Método | Endpoint                                   | Descrição                  | Auth |
+|--------|--------------------------------------------|----------------------------|------|
+| GET    | `/api/consultacondominial/moradias`                | Lista todos as moradias    | ✅   |
+| GET    | `/api/consultacondominial/moradias/{id}`           | Busca moradia por ID       | ✅   |
+| GET    | `/api/consultacondominial/moradias/{id}/moradores` | Busca moradores da moradia | ✅   |
+| GET    | `/api/consultacondominial/blocos`                  | Lista todos os blocos      | ✅   |
+| GET    | `/api/consultacondominial/blocos/{id}`             | Busca bloco por ID         | ✅   |
+| GET    | `/api/consultacondominial/blocos/{id}/moradias`    | Busca bloco por ID         | ✅   |
+
 
 
 ## 📁 Estrutura do Projeto

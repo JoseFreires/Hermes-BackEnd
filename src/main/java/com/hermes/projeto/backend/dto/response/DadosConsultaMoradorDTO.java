@@ -3,6 +3,7 @@ package com.hermes.projeto.backend.dto.response;
 
 import java.time.LocalDate;
 
+import com.hermes.projeto.backend.domain.Morador;
 import com.hermes.projeto.backend.security.Usuario;
 
 public record DadosConsultaMoradorDTO(
@@ -18,7 +19,6 @@ public record DadosConsultaMoradorDTO(
         String foto,
         String telefone
 ) {
-    // Construtor
     public DadosConsultaMoradorDTO(Usuario usuario) {
         this(
                 usuario.getPessoa().getMorador().getId(),

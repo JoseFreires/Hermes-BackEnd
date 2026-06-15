@@ -3,6 +3,7 @@ package com.hermes.projeto.backend.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,7 +35,8 @@ public class Bloco {
     @Column(nullable = false, length = 45)
     private String nome_torre; // Ex: "Bloco A", "Torre 1"
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "Condominio_idCondominio", nullable = false)
     private Condominio condominio;
 

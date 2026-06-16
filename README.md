@@ -22,6 +22,7 @@
 | GET    | `/api/encomendas?status=RECEBIDA` | Busca encomenda por status RECEBIDA | ✅   |
 | POST   | `/api/encomendas/`                | Cria uma nova encomenda             | ✅   |
 | PUT    | `/api/encomendas/{id}`            | Atualiza a encomenda                | ✅   |
+ PUT    | `/api/encomendas/{id}/entrega`    | Atualiza a encomenda para ENTREGUE  | ✅   |
 | DELETE | `/api/encomendas/{id}`            | Remove a encomenda                  | ✅   |
 
 ### Requisições de Morador

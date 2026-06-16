@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public record DadosConsultaPessoaDTO(
 
-        Long idPessoa,
+        Long idUsuario,
 
         String nomeCompleto,
 
@@ -26,7 +26,7 @@ public record DadosConsultaPessoaDTO(
 {
         public DadosConsultaPessoaDTO(Usuario usuario){
             this(
-            usuario.getPessoa().getId(),
+            usuario.getId(),
             usuario.getPessoa().getNomeCompleto(),
             usuario.getPessoa().getCpf(),
             usuario.getPessoa().getEmail(),

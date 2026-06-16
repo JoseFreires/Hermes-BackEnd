@@ -4,6 +4,7 @@ import com.hermes.projeto.backend.dto.*;
 import com.hermes.projeto.backend.domain.Pessoa;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPessoaDTO;
 import com.hermes.projeto.backend.dto.request.DadosRegistrarPessoaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarSindicoDTO;
 import com.hermes.projeto.backend.dto.response.DadosConsultaPessoaDTO;
 import com.hermes.projeto.backend.security.Papel;
 import com.hermes.projeto.backend.security.Usuario;
@@ -35,28 +36,22 @@ public class AdmService {
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public DadosConsultaPessoaDTO registrarSindico(DadosRegistrarPessoaDTO dados, DadosLoginDTO login) {
+    public DadosConsultaPessoaDTO registrarSindico(DadosRegistrarSindicoDTO dados) {
 
         Papel papelSindico = papelRepository.findByNomePapel("ROLE_SINDICO")
                 .orElseThrow(() -> new EntityNotFoundException("O papel ROLE_SINDICO não está configurada no banco."));
 
-        Pessoa pessoa = new Pessoa(dados);
+        Pessoa pessoa = new Pessoa(dados.pessoa());
         pessoaRepository.save(pessoa);
 
-        String senhaCodificada = passwordEncoder.encode(login.senha());
-        Usuario usuario = new Usuario(login, senhaCodificada);
+        Usuario usuario = new Usuario(dados.login(), passwordEncoder.encode(dados.login().senha()));
 
-        //Colocando navegabilidade
         usuario.setPessoa(pessoa);
-
-        //Inserindo Role Sindico
         usuario.setPapel(papelSindico);
 
-        //Salva Usuario
         usuarioRepository.save(usuario);
 
         return new DadosConsultaPessoaDTO(usuario);
-
     }
 
     //GET List Sindico
@@ -86,26 +81,32 @@ public class AdmService {
         var usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado!"));
 
-        var pessoaSindico = usuario.getPessoa();
+        if (usuario.getPapel().equals("ROLE_SINDICO")){
+            var pessoaSindico = usuario.getPessoa();
 
-        if(dados.email() != null){
-            pessoaSindico.setEmail(dados.email());
+            if(dados.email() != null){
+                pessoaSindico.setEmail(dados.email());
+            }
+
+            if (dados.dataNascimento() != null) {
+                pessoaSindico.setDataNascimento(dados.dataNascimento());
+            }
+
+            if(dados.nomeCompleto() != null){
+                pessoaSindico.setNomeCompleto(dados.nomeCompleto());
+            }
+
+            if(dados.telefone() != null){
+                pessoaSindico.setTelefone(dados.telefone());
+            }
+
+            // O Hibernate salva tudo (PessoaSindico) automaticamente ao final da transação.
+            return new DadosConsultaPessoaDTO(usuario);
+        } else{
+            System.out.println("Vish não é sindico");
         }
 
-        if (dados.dataNascimento() != null) {
-            pessoaSindico.setDataNascimento(dados.dataNascimento());
-        }
-
-        if(dados.nomeCompleto() != null){
-            pessoaSindico.setNomeCompleto(dados.nomeCompleto());
-        }
-
-        if(dados.telefone() != null){
-            pessoaSindico.setTelefone(dados.telefone());
-        }
-
-        // O Hibernate salva tudo (PessoaSindico) automaticamente ao final da transação.
-        return new DadosConsultaPessoaDTO(usuario);
+        return null;
     }
 
 

@@ -7,11 +7,9 @@ import jakarta.validation.constraints.Size;
 public record DadosAtualizacaoPessoaAutorizadaDTO(
 
 
-        @NotBlank(message = "O nome é obrigatório")
         @Size(max = 100, message = "O nome não pode ter mais de 100 caracteres")
         String nome,
 
-        @NotBlank(message = "O CPF é obrigatório")
         @Pattern(regexp = "\\d{11}", message = "O CPF deve conter 11 dígitos")
         String cpf
 

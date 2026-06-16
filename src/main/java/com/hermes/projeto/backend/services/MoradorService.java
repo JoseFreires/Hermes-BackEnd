@@ -42,7 +42,6 @@ public class MoradorService {
     @Transactional(readOnly = true)
     public List<DadosConsultaPessoaAutorizadaDTO> listarTodasPessoasAutorizadas() {
         return pessoaAutorizadaRepository.findAll().stream()
-                .filter(PessoaAutorizada::getAtivo)
                 .map(DadosConsultaPessoaAutorizadaDTO::new)
                 .toList();
     }
@@ -78,16 +77,5 @@ public class MoradorService {
         return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
     }
 
-    //"Delete" Pessoa Autorizada
-    @Transactional
-    public void desativarPessoaAutorizada(Long id){
-
-        var pessoaAutorizada = pessoaAutorizadaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pessoa Autorizada não encontrado."));
-
-        pessoaAutorizada.setAtivo(false);
-
-        pessoaAutorizadaRepository.save(pessoaAutorizada);
-    }
 
 }

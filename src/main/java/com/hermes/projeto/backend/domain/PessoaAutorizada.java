@@ -33,13 +33,11 @@ public class PessoaAutorizada {
         @JoinColumn(name = "morador_idMorador", nullable = false)
         private Morador morador;
 
-        private Boolean ativo;
 
         public PessoaAutorizada(DadosRegistrarPessoaAutorizadaDTO dados, Morador morador) {
                 this.nome = dados.nome();
                 this.cpf = dados.cpf();
                 this.morador = morador;
-                this.ativo = true;
         }
 }
 

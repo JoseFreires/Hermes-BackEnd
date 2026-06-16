@@ -56,6 +56,25 @@
 | GET    | `/api/consultacondominial/blocos/{id}`             | Busca bloco por ID         | ✅   |
 | GET    | `/api/consultacondominial/blocos/{id}/moradias`    | Busca bloco por ID         | ✅   |
 
+### Requisições de Sindicos
+
+| Método | Endpoint                       | Descrição                     | Auth |
+|--------|--------------------------------|-------------------------------|------|
+| GET    | `/api/sindicos`                | Lista todos as sindicos       | ✅   |
+| GET    | `/api/sindicos/{id}` | Busca sindico por ID    | ✅   |
+| POST   | `/api/sindicos`      | Cria um novo sindico          | ✅   |
+| PUT    | `/api/sindicos/{id}` | Atualiza sindico              | ✅   |
+| DELETE | `/api/sindicos/{id}` | Remove o sindico              | ✅   |
+
+
+### Requisições de Pessoas Autorizadas
+
+| Método | Endpoint                                       | Descrição                          | Auth |
+|--------|------------------------------------------------|------------------------------------|------|
+| GET    | `/api/pessoasAutorizadas`                      | Lista todos as pessoas autorizadas | ✅   |
+| GET    | `/api/pessoasAutorizadas/{id}`                 | Busca pessoa autorizada por ID     | ✅   |
+| POST   | `/api/pessoasAutorizadas`                      | Cadastra pessoa autorizada         | ✅   |
+| PUT    | `/api/pessoasAutorizadas/{id}`                     | Atualiza pessoa autorizada por ID  | ✅   |
 
 
 ## 📁 Estrutura do Projeto

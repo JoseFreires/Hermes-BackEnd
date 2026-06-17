@@ -37,8 +37,9 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(request -> {
                 // Autenticação - permitir acesso público
-                request.requestMatchers(HttpMethod.POST, "/login").permitAll();
-                request.requestMatchers(HttpMethod.GET, "/login/eu").permitAll();
+                request.requestMatchers(HttpMethod.POST, "/auth/entrar").permitAll();
+                request.requestMatchers(HttpMethod.POST, "/auth/sair").permitAll();
+                request.requestMatchers(HttpMethod.GET, "/auth/eu").permitAll();
 
                 // ENCOMENDAS
                 request.requestMatchers(HttpMethod.POST, "/encomendas").hasAnyRole("PORTEIRO", "ADMIN");

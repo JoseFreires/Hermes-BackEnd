@@ -34,9 +34,8 @@ public class EncomendaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity encontrarEncomendaPorId(@PathVariable Long id) {
-        var detalhes = portariaService.buscarEncomendaPorId(id);
-        return ResponseEntity.ok(detalhes);
+    public ResponseEntity<DadosConsultaEncomendaDTO> encontrarEncomendaPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(portariaService.buscarEncomendaPorId(id));
     }
 
     @PostMapping

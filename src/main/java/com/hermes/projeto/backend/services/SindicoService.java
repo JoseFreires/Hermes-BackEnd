@@ -3,7 +3,7 @@ package com.hermes.projeto.backend.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.hermes.projeto.backend.domain.Porteiro;
+import com.hermes.projeto.backend.domain.*;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoMoradorDTO;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPorteiroDTO;
 import com.hermes.projeto.backend.dto.request.DadosRegistrarMoradorDTO;
@@ -15,9 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hermes.projeto.backend.domain.Morador;
-import com.hermes.projeto.backend.domain.Pessoa;
-import com.hermes.projeto.backend.domain.Moradia;
 import com.hermes.projeto.backend.security.Papel;
 import com.hermes.projeto.backend.security.Usuario;
 
@@ -36,6 +33,9 @@ public class SindicoService {
     private MoradorRepository moradorRepository;
 
     @Autowired
+    private EncomendaRepository encomendaRepository;
+
+    @Autowired
     private PorteiroRepository porteiroRepository;
 
     @Autowired
@@ -43,9 +43,6 @@ public class SindicoService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private CondominioRepository condominioRepository;
 
     @Autowired
     private BlocoRepository blocoRepository;
@@ -119,6 +116,26 @@ public class SindicoService {
 
         return new DadosConsultaMoradorDTO(usuario);
     }
+
+    //GET Encomendas do Morador
+    @Transactional(readOnly = true)
+    public DadosConsultaMoradorEncomendasDTO buscarEncomendasMorador(Long idMorador) {
+        Usuario usuario = moradorRepository.findUsuarioByMoradorId(idMorador)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
+
+
+        if (usuario.getPessoa().getMorador() == null) {
+            throw new EntityNotFoundException("O usuário informado não é um morador.");
+        }
+
+        List<Encomenda> encomendas = encomendaRepository.findByMoradorId(idMorador);
+
+        return new DadosConsultaMoradorEncomendasDTO(encomendas.stream()
+                                                        .map(DadosConsultaEncomendaDTO::new)
+                                                        .toList());
+    }
+
+
 
     //PUT Morador
     @Transactional

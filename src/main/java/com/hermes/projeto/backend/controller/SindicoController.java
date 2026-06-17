@@ -1,9 +1,6 @@
 package com.hermes.projeto.backend.controller;
 
-import com.hermes.projeto.backend.dto.DadosLoginDTO;
-import com.hermes.projeto.backend.dto.request.DadosAtualizacaoMoradorDTO;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPessoaDTO;
-import com.hermes.projeto.backend.dto.request.DadosRegistrarPessoaDTO;
 import com.hermes.projeto.backend.dto.request.DadosRegistrarSindicoDTO;
 import com.hermes.projeto.backend.dto.response.DadosConsultaPessoaDTO;
 import com.hermes.projeto.backend.services.AdmService;

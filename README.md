@@ -27,13 +27,14 @@
 
 ### Requisições de Morador
 
-| Método | Endpoint              | Descrição                       | Auth |
-|--------|-----------------------|---------------------------------|------|
-| GET    | `/api/moradores`      | Lista todos os moradores ativos | ✅   |
-| GET    | `/api/moradores/{id}` | Busca morador por ID            | ✅   |
-| POST   | `/api/moradores`      | Cria um novo morador            | ✅   |
-| PUT    | `/api/moradores/{id}` | Atualiza morador                | ✅   |
-| DELETE | `/api/moradores/{id}` | Remove o morador                | ✅   |
+| Método | Endpoint                         | Descrição                          | Auth |
+|--------|----------------------------------|------------------------------------|------|
+| GET    | `/api/moradores`                 | Lista todos os moradores ativos    | ✅   |
+| GET    | `/api/moradores/{id}`            | Busca morador por ID               | ✅   |
+| GET    | `/api/moradores/{id}/encomendas` | Busca encomendas do morador por ID | ✅   |
+| POST   | `/api/moradores`                 | Cria um novo morador               | ✅   |
+| PUT    | `/api/moradores/{id}`            | Atualiza morador                   | ✅   |
+| DELETE | `/api/moradores/{id}`            | Remove o morador                   | ✅   |
 
 
 ### Requisições de Porteiro

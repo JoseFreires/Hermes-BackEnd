@@ -29,7 +29,7 @@ public class PortariaService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private EncomendaRepository repository;
+    private EncomendaRepository encomendaRepository;
 
     @Autowired
     private PessoaRepository pessoaRepository;
@@ -56,7 +56,7 @@ public class PortariaService {
         String tokenEncomenda = gerarTokenEncomenda();
 
         var encomenda = new Encomenda(dados, porteiro, morador, tokenEncomenda);
-        repository.save(encomenda);
+        encomendaRepository.save(encomenda);
 
         return new DadosConsultaEncomendaDTO(encomenda);
     }
@@ -64,8 +64,8 @@ public class PortariaService {
     @Transactional(readOnly = true)
     public List<DadosConsultaEncomendaDTO> listarEncomendas(StatusEncomenda status) {
         List<Encomenda> encomendas = (status != null)
-                ? repository.findByStatus(status)
-                : repository.findAll();
+                ? encomendaRepository.findByStatus(status)
+                : encomendaRepository.findAll();
 
         return encomendas.stream()
                 .map(DadosConsultaEncomendaDTO::new)
@@ -75,7 +75,7 @@ public class PortariaService {
 
     @Transactional(readOnly = true)
     public DadosConsultaEncomendaDTO buscarEncomendaPorId(Long id) {
-        var encomenda = repository.findById(id)
+        var encomenda = encomendaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Encomenda não encontrada"));
         return new DadosConsultaEncomendaDTO(encomenda);
     }
@@ -84,7 +84,7 @@ public class PortariaService {
     @Transactional
     public void registrarEntregaEncomenda(Long idEncomenda, DadosAtualizarStatusEncomendaDTO dados) {
 
-        var encomenda = repository.findById(idEncomenda)
+        var encomenda = encomendaRepository.findById(idEncomenda)
                 .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
 
         if (encomenda.getStatusEncomenda() == StatusEncomenda.ENTREGUE) {
@@ -95,13 +95,13 @@ public class PortariaService {
         encomenda.setDataHoraRetirado(LocalDateTime.now());
         encomenda.setTipoRetirada(dados.tipoRetirada());
 
-        repository.save(encomenda);
+        encomendaRepository.save(encomenda);
     }
 
     @Transactional
     public void editarEncomenda(Long id, DadosAtualizacaoEncomendaDTO dados) {
 
-        var encomenda = repository.findById(id)
+        var encomenda = encomendaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Encomenda não encontrada!"));
 
 
@@ -124,15 +124,15 @@ public class PortariaService {
 
 
 
-        repository.save(encomenda);
+        encomendaRepository.save(encomenda);
     }
 
 
     @Transactional
     public void deletarEncomendaPorId(Long id){
-        if (!repository.existsById(id)) {
+        if (!encomendaRepository.existsById(id)) {
             throw new EntityNotFoundException("A encomenda informada não existe.");
         }
-        repository.deleteById(id);
+        encomendaRepository.deleteById(id);
     }
 }

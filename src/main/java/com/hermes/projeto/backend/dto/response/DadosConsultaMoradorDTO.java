@@ -2,7 +2,9 @@ package com.hermes.projeto.backend.dto.response;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.hermes.projeto.backend.domain.Encomenda;
 import com.hermes.projeto.backend.domain.Morador;
 import com.hermes.projeto.backend.security.Usuario;
 
@@ -32,6 +34,7 @@ public record DadosConsultaMoradorDTO(
                 usuario.getPessoa().getDataNascimento(),
                 usuario.getPessoa().getMorador().getUrlFoto(),
                 usuario.getPessoa().getTelefone()
+
 
         );
 

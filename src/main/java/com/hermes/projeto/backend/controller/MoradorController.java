@@ -3,6 +3,7 @@ package com.hermes.projeto.backend.controller;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoMoradorDTO;
 import com.hermes.projeto.backend.dto.request.DadosRegistrarMoradorDTO;
 import com.hermes.projeto.backend.dto.response.DadosConsultaMoradorDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaMoradorEncomendasDTO;
 import com.hermes.projeto.backend.services.SindicoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,12 @@ public class MoradorController {
     @GetMapping("/{id}")
     public ResponseEntity<DadosConsultaMoradorDTO> encontrarMoradorPorId(@PathVariable Long id) {
         return ResponseEntity.ok(sindicoService.buscarMoradorPorId(id));
+    }
+
+    // Busca as encomendas de um morador pelo seu id
+    @GetMapping("/{id}/encomendas")
+    public ResponseEntity<DadosConsultaMoradorEncomendasDTO> encontrarEncomendasMorador(@PathVariable Long id) {
+        return ResponseEntity.ok(sindicoService.buscarEncomendasMorador(id));
     }
 
 

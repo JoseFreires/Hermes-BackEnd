@@ -31,6 +31,12 @@ public class PessoaAutorizada {
         return ResponseEntity.ok(moradorService.buscarPessoaAutorizadaPorId(id));
     }
 
+    // Busca uma pessoa autorizada pelo seu id
+    @GetMapping("/moradores/{id}")
+    public ResponseEntity<List<DadosConsultaPessoaAutorizadaDTO>> encontrarPessoaAutorizadaPorMoradorId(@PathVariable Long id) {
+        return ResponseEntity.ok(moradorService.buscarPessoaAutorizadaPorIdMorador(id));
+    }
+
 
     // Registra uma pessoa autorizada
     @PostMapping

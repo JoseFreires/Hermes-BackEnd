@@ -7,9 +7,11 @@
 
 ### Autenticação
 
-| Método | Endpoint     | Descrição                  | Auth |
-|--------|--------------|----------------------------|------|
-| POST   | `/api/login` | Login e geração de token   | ❌   |
+| Método | Endpoint           | Descrição                  | Auth |
+|--------|--------------------|----------------------------|-----|
+| GET    | `/api/auth/eu`     | Login e geração de token   | ✅    |
+| POST   | `/api/auth/entrar` | Login e geração de token   | ❌  |
+| POST   | `/api/auth/sair`   | Logout e limpeza de cookie | ✅ |
 
 
 ### Requisições de Encomenda

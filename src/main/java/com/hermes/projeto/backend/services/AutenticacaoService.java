@@ -27,7 +27,6 @@ public class AutenticacaoService implements UserDetailsService{
             return repositoryContaAdm.findByUsername(username);
         }
 
-
     }
 
 

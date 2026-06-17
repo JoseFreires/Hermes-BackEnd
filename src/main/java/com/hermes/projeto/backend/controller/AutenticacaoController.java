@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class AutenticacaoController {
 
     @Autowired
@@ -57,8 +57,8 @@ public class AutenticacaoController {
 
 
     //POST Login
-    @PostMapping
-    public ResponseEntity<DadosConsultaLoginDTO> logar(@RequestBody @Valid DadosLoginDTO dados) {
+    @PostMapping("/entrar")
+    public ResponseEntity<DadosConsultaLoginDTO> entrar(@RequestBody @Valid DadosLoginDTO dados) {
 
         var token = new UsernamePasswordAuthenticationToken(dados.username(), dados.senha());
         var authentication = manager.authenticate(token);
@@ -90,9 +90,24 @@ public class AutenticacaoController {
                 .body(dadosFrontEnd);
     }
 
+    //POST Login
+    @PostMapping("/sair")
+    public ResponseEntity<Void> sair() {
+        ResponseCookie jwtCookie = ResponseCookie.from("jwtToken", "")
+                .httpOnly(true)
+                .secure(false) // OBS: mudar para true em produção
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.noContent()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .build();
+    }
+
 
     //Como solicitado pelos "bons de frente" GET login
-
     @GetMapping("/eu")
     public ResponseEntity<DadosConsultaLoginDTO> consultaUsuarioLogado(Authentication authentication) {
 

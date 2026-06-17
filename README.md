@@ -73,12 +73,13 @@
 
 ### Requisições de Pessoas Autorizadas
 
-| Método | Endpoint                                       | Descrição                          | Auth |
-|--------|------------------------------------------------|------------------------------------|------|
-| GET    | `/api/pessoasAutorizadas`                      | Lista todos as pessoas autorizadas | ✅   |
-| GET    | `/api/pessoasAutorizadas/{id}`                 | Busca pessoa autorizada por ID     | ✅   |
-| POST   | `/api/pessoasAutorizadas`                      | Cadastra pessoa autorizada         | ✅   |
-| PUT    | `/api/pessoasAutorizadas/{id}`                     | Atualiza pessoa autorizada por ID  | ✅   |
+| Método | Endpoint                                 | Descrição                          | Auth |
+|--------|------------------------------------------|------------------------------------|------|
+| GET    | `/api/pessoasAutorizadas`                | Lista todos as pessoas autorizadas | ✅   |
+| GET    | `/api/pessoasAutorizadas/{id}`           | Busca pessoa autorizada por ID     | ✅   |
+| GET    | `/api/pessoasAutorizadas/moradores/{id}` | Busca pessoa autorizada por ID     | ✅   |
+| POST   | `/api/pessoasAutorizadas`                | Cadastra pessoa autorizada         | ✅   |
+| PUT    | `/api/pessoasAutorizadas/{id}`           | Atualiza pessoa autorizada por ID  | ✅   |
 
 
 ## 📁 Estrutura do Projeto

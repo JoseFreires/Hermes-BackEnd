@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/pessoasAutorizadas")
-public class PessoaAutorizada {
+public class PessoaAutorizadaController {
 
     @Autowired
     MoradorService moradorService;

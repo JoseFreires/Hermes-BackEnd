@@ -1,0 +1,23 @@
+package com.hermes.projeto.backend.dto.response;
+
+import com.hermes.projeto.backend.domain.Bloco;
+
+public record DadosConsultaBlocoDTO(
+
+        Long idBloco,
+
+        String nomeTorre,
+
+        Long condominioIdCondominio,
+
+        String nomeCondominio
+) {
+    public DadosConsultaBlocoDTO(Bloco bloco) {
+        this(
+                bloco.getId(),
+                bloco.getNome_torre(),
+                bloco.getCondominio().getId(),
+                bloco.getCondominio().getNome_condominio()
+        );
+    }
+}

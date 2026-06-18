@@ -1,0 +1,1 @@
+ALTER TABLE pessoa_autorizada RENAME COLUMN idPesssoaAutorizada TO idPessoaAutorizada;

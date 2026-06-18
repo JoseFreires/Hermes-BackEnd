@@ -1,11 +1,15 @@
 package com.hermes.projeto.backend.services;
 
-import com.hermes.projeto.backend.dto.*;
-import com.hermes.projeto.backend.entities.PessoaAutorizada;
-import com.hermes.projeto.backend.entities.security.Usuario;
+import com.hermes.projeto.backend.domain.Encomenda;
+import com.hermes.projeto.backend.domain.PessoaAutorizada;
+import com.hermes.projeto.backend.dto.request.DadosAtualizacaoPessoaAutorizadaDTO;
+import com.hermes.projeto.backend.dto.request.DadosRegistrarPessoaAutorizadaDTO;
+import com.hermes.projeto.backend.dto.response.DadosConsultaPessoaAutorizadaDTO;
 import com.hermes.projeto.backend.repository.MoradorRepository;
 import com.hermes.projeto.backend.repository.PessoaAutorizadaRepository;
+import com.hermes.projeto.backend.security.Usuario;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.collection.spi.PersistentSortedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +45,6 @@ public class MoradorService {
     @Transactional(readOnly = true)
     public List<DadosConsultaPessoaAutorizadaDTO> listarTodasPessoasAutorizadas() {
         return pessoaAutorizadaRepository.findAll().stream()
-                .filter(PessoaAutorizada::getAtivo)
                 .map(DadosConsultaPessoaAutorizadaDTO::new)
                 .toList();
     }
@@ -52,6 +55,23 @@ public class MoradorService {
         PessoaAutorizada pessoaAutorizada = pessoaAutorizadaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pessoa autorizada não encontrada"));
         return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
+    }
+
+    //GET Lista Pessoas Autorizadas por Morador
+    @Transactional(readOnly = true)
+    public List<DadosConsultaPessoaAutorizadaDTO> buscarPessoaAutorizadaPorIdMorador(Long idMorador) {
+        Usuario usuario = moradorRepository.findUsuarioByMoradorId(idMorador)
+                .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
+
+        if (usuario.getPessoa().getMorador() == null) {
+            throw new EntityNotFoundException("O usuário informado não é um morador.");
+        }
+
+        List<PessoaAutorizada> pessoaAutorizadas = pessoaAutorizadaRepository.findByMoradorId(idMorador);
+
+        return pessoaAutorizadas.stream()
+                .map(DadosConsultaPessoaAutorizadaDTO::new)
+                .toList();
     }
 
     //PUT Pessoa Autorizada
@@ -77,16 +97,5 @@ public class MoradorService {
         return new DadosConsultaPessoaAutorizadaDTO(pessoaAutorizada);
     }
 
-    //"Delete" Pessoa Autorizada
-    @Transactional
-    public void desativarPessoaAutorizada(Long id){
-
-        var pessoaAutorizada = pessoaAutorizadaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pessoa Autorizada não encontrado."));
-
-        pessoaAutorizada.setAtivo(false);
-
-        pessoaAutorizadaRepository.save(pessoaAutorizada);
-    }
 
 }

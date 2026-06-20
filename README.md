@@ -342,7 +342,7 @@ Hermes-BackEnd/src/
 
 <p>Feito por: </p>
 
-<table align="center">
+<table>
   <tr>
     <td align="center">
       <a href="https://github.com/JoseFreires">

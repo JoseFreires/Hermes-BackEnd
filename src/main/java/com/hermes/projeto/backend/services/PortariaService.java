@@ -7,6 +7,7 @@ import java.util.List;
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoEncomendaDTO;
 import com.hermes.projeto.backend.dto.request.DadosAtualizarStatusEncomendaDTO;
 import com.hermes.projeto.backend.domain.enums.StatusEncomenda;
+import com.hermes.projeto.backend.dto.request.DadosEnvioEmailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ public class PortariaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    EmailServiceImpl emailService;
+
     private String gerarTokenEncomenda(){
         SecureRandom random = new SecureRandom();
         int tokenEncomenda = random.nextInt(10000);
@@ -57,6 +60,13 @@ public class PortariaService {
 
         var encomenda = new Encomenda(dados, porteiro, morador, tokenEncomenda);
         encomendaRepository.save(encomenda);
+
+        DadosEnvioEmailDTO email = new DadosEnvioEmailDTO(
+                morador.getEmail(),
+                "Recebemos sua encomenda!",
+                "Olá " + morador.getNomeCompleto() + ", sua encomenda chegou na portaria!"
+        );
+        emailService.enviarEmail(email);
 
         return new DadosConsultaEncomendaDTO(encomenda);
     }
@@ -94,6 +104,8 @@ public class PortariaService {
         encomenda.setStatusEncomenda(StatusEncomenda.ENTREGUE);
         encomenda.setDataHoraRetirado(LocalDateTime.now());
         encomenda.setTipoRetirada(dados.tipoRetirada());
+
+
 
         encomendaRepository.save(encomenda);
     }

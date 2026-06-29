@@ -8,7 +8,10 @@ import com.hermes.projeto.backend.dto.request.DadosAtualizacaoEncomendaDTO;
 import com.hermes.projeto.backend.dto.request.DadosAtualizarStatusEncomendaDTO;
 import com.hermes.projeto.backend.domain.enums.StatusEncomenda;
 import com.hermes.projeto.backend.dto.request.DadosEnvioEmailDTO;
+import com.hermes.projeto.backend.util.EncomendaRegistradaEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +38,9 @@ public class PortariaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    EmailServiceImpl emailService;
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
     private String gerarTokenEncomenda(){
         SecureRandom random = new SecureRandom();
@@ -43,30 +48,22 @@ public class PortariaService {
         return String.format("%04d", tokenEncomenda);
     }
 
+    @PreAuthorize("hasRole('PORTEIRO')")
     @Transactional
     public DadosConsultaEncomendaDTO registrarEncomenda(DadosRegistrarEncomendaDTO dados, Usuario logado) {
-        Pessoa morador = pessoaRepository.findById(dados.idDestinatario())
+        System.out.println("ID: " + dados.idDestinatario());
+        Pessoa pessoa = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
 
         var porteiro = usuarioRepository.findById(logado.getId())
             .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
 
-        boolean ePorteiro = porteiro.getPapel().getNomePapel().equals("ROLE_PORTEIRO"); 
-        if (!ePorteiro) {
-            throw new RuntimeException("Apenas usuários com papel de porteiro podem registrar encomendas");
-        }
-
         String tokenEncomenda = gerarTokenEncomenda();
 
-        var encomenda = new Encomenda(dados, porteiro, morador, tokenEncomenda);
+        var encomenda = new Encomenda(dados, porteiro, pessoa, tokenEncomenda);
         encomendaRepository.save(encomenda);
 
-        DadosEnvioEmailDTO email = new DadosEnvioEmailDTO(
-                morador.getEmail(),
-                "Recebemos sua encomenda!",
-                "Olá " + morador.getNomeCompleto() + ", sua encomenda chegou na portaria!"
-        );
-        emailService.enviarEmail(email);
+        applicationEventPublisher.publishEvent(new EncomendaRegistradaEvent(pessoa.getMorador()));
 
         return new DadosConsultaEncomendaDTO(encomenda);
     }

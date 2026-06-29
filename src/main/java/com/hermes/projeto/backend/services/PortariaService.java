@@ -2,6 +2,7 @@ package com.hermes.projeto.backend.services;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.hermes.projeto.backend.dto.request.DadosAtualizacaoEncomendaDTO;
@@ -51,19 +52,25 @@ public class PortariaService {
     @PreAuthorize("hasRole('PORTEIRO')")
     @Transactional
     public DadosConsultaEncomendaDTO registrarEncomenda(DadosRegistrarEncomendaDTO dados, Usuario logado) {
-        System.out.println("ID: " + dados.idDestinatario());
         Pessoa pessoa = pessoaRepository.findById(dados.idDestinatario())
                 .orElseThrow(() -> new EntityNotFoundException("Morador não encontrado"));
 
         var porteiro = usuarioRepository.findById(logado.getId())
             .orElseThrow(() -> new EntityNotFoundException("Porteiro não encontrado"));
 
-        String tokenEncomenda = gerarTokenEncomenda();
 
-        var encomenda = new Encomenda(dados, porteiro, pessoa, tokenEncomenda);
+        var encomenda = new Encomenda(dados, porteiro, pessoa, gerarTokenEncomenda());
         encomendaRepository.save(encomenda);
 
-        applicationEventPublisher.publishEvent(new EncomendaRegistradaEvent(pessoa.getMorador()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        applicationEventPublisher.publishEvent(new EncomendaRegistradaEvent(
+                pessoa.getNomeCompleto(),
+                pessoa.getEmail(),
+                dados.nomePacote(),
+                porteiro.getPessoa().getNomeCompleto(),
+                LocalDateTime.now().format(formatter)
+        ));
 
         return new DadosConsultaEncomendaDTO(encomenda);
     }
@@ -101,8 +108,6 @@ public class PortariaService {
         encomenda.setStatusEncomenda(StatusEncomenda.ENTREGUE);
         encomenda.setDataHoraRetirado(LocalDateTime.now());
         encomenda.setTipoRetirada(dados.tipoRetirada());
-
-
 
         encomendaRepository.save(encomenda);
     }
